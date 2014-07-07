@@ -12,7 +12,7 @@ This is a client that follows twitter streams and writes the collected tweets to
 ### setup
 ```bash
 cd crawlers/twitter
-. bin\activate
+. bin/activate
 pip install -r requirements
 ```
 
