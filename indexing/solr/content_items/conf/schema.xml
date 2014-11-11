@@ -58,13 +58,13 @@
    -->
    <field name="_id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
    <dynamicField name="source_meta.eumssi.*" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+   <dynamicField name="source_meta.eumssi.keywords.*" type="ignored" />
    <field name="source_meta.eumssi.keywords" type="string" indexed="true" stored="true" required="false" multiValued="true" />
+   <copyField source="source_meta.eumssi.keywords.*" dest="source_meta.eumssi.keywords" />
 
    <!-- TODO: this should be type="tdate" but some items have invalid dates and mongo-connector crashes -->
    <field name="source_meta.eumssi.datePublished" type="string" indexed="true" stored="true" required="false" multiValued="false" />
    <dynamicField name="extracted_meta.*" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
-
-   <copyField source="source_meta.eumssi.keywords.*" dest="source_meta.eumssi.keywords" />
 
    <uniqueKey>_id</uniqueKey>
 
