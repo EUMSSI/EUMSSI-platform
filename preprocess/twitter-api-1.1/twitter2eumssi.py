@@ -43,8 +43,7 @@ def main():
     items = conv.get_items()
     print items.count()
     if items.count() == 0: # no items to process
-      print "\n\n\nNO MORE ITEMS\n\n\n"
-      return
+      print "\n\n\nNO MORE ITEMS, sleeping for {time} seconds\n\n\n".format(time=SLEEP_TIME)
       time.sleep(SLEEP_TIME)
     for item in items:
       eumssi_meta = conv.convert(item['source_meta']['original'])
