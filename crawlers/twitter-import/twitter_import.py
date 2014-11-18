@@ -23,7 +23,7 @@ class StatusWriter():
         print '\n %s  %s  via %s\n' % (status['user']['screen_name'], status['created_at'], status['source'])
       except Exception as e:
         print e
-      print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source':'Twitter-DW','source_meta':{'original':status, 'format':'twitter-api-1.1'}})
+      print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source':'Twitter-DW','meta':{'original':status, 'original_format':'twitter-api-1.1'}})
     except Exception as e:
       print e
 
