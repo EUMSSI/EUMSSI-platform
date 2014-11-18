@@ -2,6 +2,8 @@
 
 import pymongo
 import time
+from datetime import datetime
+import json
 
 SLEEP_TIME=60 # wait one minute if no data to process
 
@@ -29,7 +31,9 @@ class DWvideoConverter():
   def convert(self, original):
     e = {} # eumssi
     o=original # shortcut
-    try: e['datePublished']   = o['dateText'] #TODO: date field needs to be parsed properly and converted, maybe use publicationDate
+    try:
+      d = datetime.utcfromtimestamp(json.loads(o['publicationDate'])['$date']/1000) #convert from timestamp in milliseconds
+      e['datePublished']   = d
     except Exception: pass
     try: e['inLanguage']      = o['language'] #may need language code normalization
     except Exception: pass
