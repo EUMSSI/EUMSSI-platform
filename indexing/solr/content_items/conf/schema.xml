@@ -52,12 +52,12 @@
    <field name="_version_" type="long" indexed="true" stored="true"/>
    <field name="_root_" type="string" indexed="true" stored="false"/>
 
-   <!-- fields required for mongo-collector
+   <!-- Only remove the "id" field if you have a very good reason to. While not strictly
+     required, it is highly recommended. A <uniqueKey> is present in almost all Solr
+     installations. See the <uniqueKey> declaration below where <uniqueKey> is set to "id".
    -->
-   <field name="_ts" type="long" indexed="true" stored="true"/>
-   <field name="ns" type="string" indexed="true" stored="true"/>
-
    <field name="_id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+   <field name="source" type="string" indexed="true" stored="true" required="true" multiValued="false" />
    <dynamicField name="source_meta.eumssi.*" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
    <dynamicField name="source_meta.eumssi.keywords.*" type="ignored" />
    <field name="source_meta.eumssi.keywords" type="string" indexed="true" stored="true" required="false" multiValued="true" />
