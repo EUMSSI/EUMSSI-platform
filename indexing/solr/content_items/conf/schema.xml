@@ -57,15 +57,14 @@
      installations. See the <uniqueKey> declaration below where <uniqueKey> is set to "id".
    -->
    <field name="_id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
-   <field name="source" type="string" indexed="true" stored="true" required="true" multiValued="false" />
-   <dynamicField name="meta.source.*" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
-   <dynamicField name="meta.source.keywords.*" type="ignored" />
-   <field name="meta.source.keywords" type="string" indexed="true" stored="true" required="false" multiValued="true" />
-   <copyField source="meta.source.keywords.*" dest="meta.source.keywords" />
+   <dynamicField name="source_meta.eumssi.*" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+   <dynamicField name="source_meta.eumssi.keywords.*" type="ignored" />
+   <field name="source_meta.eumssi.keywords" type="string" indexed="true" stored="true" required="false" multiValued="true" />
+   <copyField source="source_meta.eumssi.keywords.*" dest="source_meta.eumssi.keywords" />
 
    <!-- TODO: this should be type="tdate" but some items have invalid dates and mongo-connector crashes -->
-   <field name="meta.source.datePublished" type="string" indexed="true" stored="true" required="false" multiValued="false" />
-   <dynamicField name="meta.extracted.*" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+   <field name="source_meta.eumssi.datePublished" type="tdate" indexed="true" stored="true" required="false" multiValued="false" />
+   <dynamicField name="extracted_meta.*" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
 
    <uniqueKey>_id</uniqueKey>
 
