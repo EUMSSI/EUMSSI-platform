@@ -2,52 +2,97 @@
 
 import pymongo
 import time
+import datetime
 
-SLEEP_TIME=60 # wait one minute if no data to process
 
-class TwitterConverter():
-  mongo_client = pymongo.MongoClient()
-  db = mongo_client['eumssi_test']
-  col = db['content_items']
+class EumssiConverter:
 
-  def get_items(self, limit=1000):
-    return self.col.find({'source_meta.format':'twitter-api-1.1','source_meta.eumssi': {'$exists':False}},fields=['source_meta.original'],limit=limit)
+  SEPARATOR='###' # separator used to flatten hierarchical fields (corresponds to dot-notation)
+  SLEEP_TIME=60 # wait one minute if no data to process
 
-  def put_item(self, item_id, eumssi_meta):
+  def __init__(self, source_format, mapping):
+    self.source_format = source_format
+    self.mapping = mapping
+    mongo_client = pymongo.MongoClient()
+    db = mongo_client['eumssi_test']
+    self.col = db['content_items']
+    self.col.create_index("meta.original_format")
+    print "created index meta.original_format"
+    self.col.create_index("processing.available_data")
+    print "created index processing.available_data"
+
+  def get_items(self, limit=5):
+    #return self.col.find({'meta.original_format': source_format,'processing.available_data': "metadata"},fields=['meta.original'],limit=limit)
+    project = {}
+    for f in self.mapping:
+        project[f[0].replace('.',self.SEPARATOR)] = '$meta.original.'+f[0] # flatten document structure (note: maintains inner structure of fields)
+    pipeline = [{'$match':{'meta.original_format': self.source_format,'processing.available_data': {'$ne':"metadata"}}},{'$limit':limit},{'$project':project}] #limit doesn't seem to work
+    return self.col.aggregate(pipeline,cursor={})
+
+  def put_item(self, item_id, eumssi_meta, available_data):
     ''' write eumssi_meta tweet to MongoDB '''
     try:
-      print "updated: ", self.col.update({'_id':item_id},{'$set':{'source_meta.eumssi':eumssi_meta}})
+      print "updated: ", self.col.update({'_id':item_id},{'$set':{'meta.source':eumssi_meta},'$addToSet':{'processing.available_data': {'$each':available_data}}})
       #print item_id
-      #print eumssi_meta
+      #print item_id, eumssi_meta, available_data
     except Exception as e:
       print e
 
   def convert(self, original):
-    e = {} # eumssi
-    o=original # shortcut
-    try: e['datePublished']   = o['created_at']
-    except Exception: pass
-    try: e['inLanguage']      = o['lang']
-    except Exception: pass
-    try: e['text']            = o['text']
-    except Exception: pass
-    try: e['author']          = o['user']['id_str']
-    except Exception: pass
-    try: e['contentLocation'] = o['coordinates']['coordinates']
-    except Exception: pass
-    return e
+    converted = {} # eumssi
+    available_data = ['metadata']
+    for m in self.mapping:
+        org_field=m[0]
+        new_field=m[1]
+        transform=m[2]
+        flags=m[3]
+        try:
+            converted[new_field] = original[org_field.replace('.',self.SEPARATOR)]
+            if transform:
+                converted[new_field] = transform(converted[new_field])
+            available_data.extend(flags)
+        except Exception as ex:
+            pass #ignore missing fields
+    return converted, available_data
+
+  def run(self):
+    while(True):
+      items = self.get_items()
+      #print items.count()
+      if not items.alive: # no items to process
+        print "\n\n\nNO MORE ITEMS, sleeping for {time} seconds\n\n\n".format(time=self.SLEEP_TIME)
+        time.sleep(SLEEP_TIME)
+      for item in items:
+        eumssi_meta, available_data = self.convert(item)
+        self.put_item(item['_id'],eumssi_meta,available_data)
+
+
+def transf_date(x):
+    if x.__class__==datetime.datetime:
+        return x
+    else:
+        return datetime.datetime.strptime(x,'%a %b %d %X +0000 %Y') #Twitter's weird date format
+
+def transf_lang(x):
+    return x #Twitter uses two character ISO codes
+
+def transf_coordinates(x):
+    return x #TODO: figure out how to represent this correctly
+
+'''
+mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_function>, [<available_data>,..]}
+'''
+twitter_map = [
+    ['created_at', 'datePublished', transf_date, []],
+    ['lang', 'inLanguage', None, []],
+    ['text', 'text', None, ['text']],
+    ['user.id_str', 'author', None, []],
+    ['coordinates.coordinates','contentLocation', transf_coordinates, []]
+]
 
 def main():
-  conv = TwitterConverter()
-  while(True):
-    items = conv.get_items()
-    print items.count()
-    if items.count() == 0: # no items to process
-      print "\n\n\nNO MORE ITEMS, sleeping for {time} seconds\n\n\n".format(time=SLEEP_TIME)
-      time.sleep(SLEEP_TIME)
-    for item in items:
-      eumssi_meta = conv.convert(item['source_meta']['original'])
-      conv.put_item(item['_id'],eumssi_meta)
+  conv = EumssiConverter('twitter-api-1.1',twitter_map)
+  conv.run()
 
 if __name__ == '__main__':
   main()

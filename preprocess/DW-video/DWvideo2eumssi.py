@@ -2,59 +2,93 @@
 
 import pymongo
 import time
+import datetime
+import json
 
-SLEEP_TIME=60 # wait one minute if no data to process
+class EumssiConverter:
 
-class DWvideoConverter():
-  mongo_client = pymongo.MongoClient()
-  db = mongo_client['eumssi_test']
-  col = db['content_items']
+  SEPARATOR='###' # separator used to flatten hierarchical fields (corresponds to dot-notation)
+  SLEEP_TIME=60 # wait one minute if no data to process
 
-  def get_items(self, limit=1000):
-    return self.col.find({'source_meta.format':'DW-video','source_meta.eumssi': {'$exists':False}},fields=['source_meta.original'],limit=limit)
+  def __init__(self, source_format, mapping):
+    self.source_format = source_format
+    self.mapping = mapping
+    mongo_client = pymongo.MongoClient()
+    db = mongo_client['eumssi_test']
+    self.col = db['content_items']
+    self.col.create_index("meta.original_format")
+    print "created index meta.original_format"
+    self.col.create_index("processing.available_data")
+    print "created index processing.available_data"
 
-  def put_item(self, item_id, eumssi_meta):
+  def get_items(self, limit=5):
+    #return self.col.find({'meta.original_format': source_format,'processing.available_data': "metadata"},fields=['meta.original'],limit=limit)
+    project = {}
+    for f in self.mapping:
+        project[f[0].replace('.',self.SEPARATOR)] = '$meta.original.'+f[0] # flatten document structure (note: maintains inner structure of fields)
+    pipeline = [{'$match':{'meta.original_format': self.source_format,'processing.available_data': {'$ne':"metadata"}}},{'$limit':limit},{'$project':project}] #limit doesn't seem to work
+    return self.col.aggregate(pipeline,cursor={})
+
+  def put_item(self, item_id, eumssi_meta, available_data):
     ''' write eumssi_meta tweet to MongoDB '''
     try:
-      print "updated: ", self.col.update({'_id':item_id},{'$set':{'source_meta.eumssi':eumssi_meta}})
+      print "updated: ", self.col.update({'_id':item_id},{'$set':{'meta.source':eumssi_meta},'$addToSet':{'processing.available_data': {'$each':available_data}}})
       #print item_id
-      #print eumssi_meta
+      #print item_id, eumssi_meta, available_data
     except Exception as e:
       print e
 
   def convert(self, original):
-    e = {} # eumssi
-    o=original # shortcut
-    try: e['datePublished']   = o['dateText'] #date field needs to be parsed properly and converted, maybe use publicationDate
-    except Exception: pass
-    try: e['inLanguage']      = o['language'] #may need language code normalization
-    except Exception: pass
-    try: e['text']            = o['description']
-    except Exception: pass
-    #try: e['author']          = o['user']['id_str'] doesn't seem to have author field
-    #except Exception: pass
-    try: e['httpHigh'] = o['httpHigh']
-    except Exception: pass
-    try: e['httpMedium'] = o['httpMedium']
-    except Exception: pass
-    try: e['keywords'] = o['tags']
-    except Exception: pass
-    try: e['headline'] = o['title']
-    except Exception: pass
-    return e
+    converted = {} # eumssi
+    available_data = ['metadata']
+    for m in self.mapping:
+        org_field=m[0]
+        new_field=m[1]
+        transform=m[2]
+        flags=m[3]
+        try:
+            converted[new_field] = original[org_field.replace('.',self.SEPARATOR)]
+            if transform:
+                converted[new_field] = transform(converted[new_field])
+            available_data.extend(flags)
+        except Exception as ex:
+            print ex #ignore missing fields
+    return converted, available_data
+
+  def run(self):
+    while(True):
+      items = self.get_items()
+      #print items.count()
+      if not items.alive: # no items to process
+        print "\n\n\nNO MORE ITEMS, sleeping for {time} seconds\n\n\n".format(time=self.SLEEP_TIME)
+        time.sleep(SLEEP_TIME)
+      for item in items:
+        eumssi_meta, available_data = self.convert(item)
+        self.put_item(item['_id'],eumssi_meta,available_data)
+
+
+def transf_date(x):
+    return datetime.datetime.utcfromtimestamp(json.loads(x)['$date']/1000) #convert from timestamp in milliseconds
+
+def transf_lang(x):
+    return x #TODO: probably need to maps "spanish"->"es", etc.
+
+'''
+mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_function>, [<available_data>,..]}
+'''
+dw_video_map = [
+    ['publicationDate', 'datePublished', transf_date, []],
+    ['language', 'inLanguage', transf_lang, []],
+    ['httpHigh', 'httpHigh', None, ['video']],
+    ['httpMedium', 'httpMedium', None, ['video']],
+    ['tags','keywords',None,[]],
+    ['title','headline',None,['text']]
+]
+
 
 def main():
-  conv = DWvideoConverter()
-  while(True):
-    items = conv.get_items()
-    print items.count()
-    if items.count() == 0: # no items to process
-      print "\n\n\nNO MORE ITEMS\n\n\n"
-      return #TODO: remove return statement to allow for continuous updates
-      time.sleep(SLEEP_TIME)
-    for item in items:
-      eumssi_meta = conv.convert(item['source_meta']['original'])
-      conv.put_item(item['_id'],eumssi_meta)
+  conv = EumssiConverter('DW-video',dw_video_map)
+  conv.run()
 
 if __name__ == '__main__':
   main()

@@ -22,7 +22,7 @@ class EumssiStreamer(TwythonStreamer):
         print '\n %s  %s  via %s\n' % (status['user']['screen_name'], status['created_at'], status['source'])
       except Exception as e:
         print e
-      print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source':'Twitter','source_meta':{'original':status, 'format':'twitter-api-1.1'}})
+      print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source':'Twitter','meta':{'original':status, 'original_format':'twitter-api-1.1'}})
     except Exception as e:
       print e
 
