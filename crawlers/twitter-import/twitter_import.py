@@ -11,7 +11,7 @@ from datetime import datetime
 class StatusWriter():
   status_wrapper = TextWrapper(width=60, initial_indent='    ', subsequent_indent='    ')
   mongo_client = pymongo.MongoClient()
-  db = mongo_client['eumssi_test']
+  db = mongo_client['eumssi_db']
   col = db['content_items']
 
   def write_status(self, status):

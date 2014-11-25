@@ -10,7 +10,7 @@ class EumssiConverter:
     self.source_format = source_format
     self.mapping = mapping
     mongo_client = pymongo.MongoClient()
-    db = mongo_client['eumssi_test']
+    db = mongo_client['eumssi_db']
     self.col = db['content_items']
     self.col.create_index("meta.original_format")
     print "created index meta.original_format"

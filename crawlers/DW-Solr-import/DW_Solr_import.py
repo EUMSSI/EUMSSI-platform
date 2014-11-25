@@ -10,7 +10,7 @@ class ItemWriter:
 
   def __init__(self, source, meta_format):
     self.mongo_client = pymongo.MongoClient()
-    self.db = self.mongo_client['eumssi_test']
+    self.db = self.mongo_client['eumssi_db']
     self.col = self.db['content_items']
     self.source = source
     self.format = meta_format
