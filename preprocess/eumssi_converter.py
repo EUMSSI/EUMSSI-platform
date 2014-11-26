@@ -56,7 +56,7 @@ class EumssiConverter:
       self.col.update({'meta.original_format': self.source_format},{$unset:{'processing.available_data':1}})
 
   def clean(self):
-      '''reset available_data field to reprocess all items'''
+      '''reset available_data field and clear existing converted metadata to reprocess all items'''
       self.col.update({'meta.original_format': self.source_format},{$unset:{'processing.available_data':1,'meta.source':1}})
 
   def run(self):
