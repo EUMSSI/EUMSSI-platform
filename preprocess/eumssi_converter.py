@@ -51,6 +51,14 @@ class EumssiConverter:
             pass #ignore missing fields
     return converted, available_data
 
+  def reset(self):
+      '''reset available_data field to reprocess all items'''
+      self.col.update({'meta.original_format': self.source_format},{$unset:{'processing.available_data':1}})
+
+  def clean(self):
+      '''reset available_data field to reprocess all items'''
+      self.col.update({'meta.original_format': self.source_format},{$unset:{'processing.available_data':1,'meta.source':1}})
+
   def run(self):
     while(True):
       items = self.get_items()
