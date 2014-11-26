@@ -7,6 +7,7 @@ class EumssiConverter:
   SLEEP_TIME=60 # wait one minute if no data to process
 
   def __init__(self, source_format, mapping):
+    ''' initialize DB connection and create indexes'''
     self.source_format = source_format
     self.mapping = mapping
     mongo_client = pymongo.MongoClient()
@@ -17,7 +18,8 @@ class EumssiConverter:
     self.col.create_index("processing.available_data")
     print "created index processing.available_data"
 
-  def get_items(self, limit=5):
+  def get_items(self, limit=1000):
+    '''get items to convert'''
     #return self.col.find({'meta.original_format': source_format,'processing.available_data': "metadata"},fields=['meta.original'],limit=limit)
     project = {}
     for f in self.mapping:
@@ -26,7 +28,7 @@ class EumssiConverter:
     return self.col.aggregate(pipeline,cursor={})
 
   def put_item(self, item_id, eumssi_meta, available_data):
-    ''' write eumssi_meta tweet to MongoDB '''
+    ''' write eumssi_meta to MongoDB '''
     try:
       print "updated: ", self.col.update({'_id':item_id},{'$set':{'meta.source':eumssi_meta},'$addToSet':{'processing.available_data': {'$each':available_data}}})
       #print item_id
@@ -35,6 +37,7 @@ class EumssiConverter:
       print e
 
   def convert(self, original):
+    '''convert metadata to eumssi format'''
     converted = {} # eumssi
     available_data = ['metadata']
     for m in self.mapping:
@@ -53,16 +56,16 @@ class EumssiConverter:
 
   def reset(self):
       '''reset available_data field to reprocess all items'''
-      self.col.update({'meta.original_format': self.source_format},{$unset:{'processing.available_data':1}})
+      self.col.update({'meta.original_format': self.source_format},{'$unset':{'processing.available_data':1}},{'multi':True})
 
   def clean(self):
       '''reset available_data field and clear existing converted metadata to reprocess all items'''
-      self.col.update({'meta.original_format': self.source_format},{$unset:{'processing.available_data':1,'meta.source':1}})
+      self.col.update({'meta.original_format': self.source_format},{'$unset':{'processing.available_data':1,'meta.source':1}},{'multi':True})
 
   def run(self):
+    '''run converter, continuously converting new items'''
     while(True):
       items = self.get_items()
-      #print items.count()
       if not items.alive: # no items to process
         print "\n\n\nNO MORE ITEMS, sleeping for {time} seconds\n\n\n".format(time=self.SLEEP_TIME)
         time.sleep(SLEEP_TIME)
