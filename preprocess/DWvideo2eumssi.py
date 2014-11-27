@@ -6,8 +6,8 @@ from eumssi_converter import EumssiConverter
 
 
 def transf_date(x):
-    # convert from timestamp in milliseconds
-    return datetime.datetime.utcfromtimestamp(json.loads(x)['$date'] / 1000)
+    # convert from string in DD.MM.YYYY format
+    return datetime.datetime.strptime(x,"%d.%m.%Y")
 
 
 def transf_lang(x):
@@ -24,7 +24,7 @@ def transf_lang(x):
 mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_function>, [<available_data>,..]}
 '''
 dw_video_map = [
-    ['publicationDate', 'datePublished', transf_date, []],
+    ['dateText', 'datePublished', transf_date, []],
     ['language', 'inLanguage', transf_lang, []],
     ['httpHigh', 'httpHigh', None, ['video']],
     ['httpMedium', 'httpMedium', None, ['video']],
