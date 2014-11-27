@@ -12,7 +12,6 @@ def transf_date(x):
 
 def transf_lang(x):
     '''normalize language codes to ISO 639-1'''
-    return x
     lang_map = {
         'german': 'de',
         'english': 'en',
