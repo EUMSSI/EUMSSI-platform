@@ -1,6 +1,7 @@
 package eu.eumssi.api;
 
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,6 +100,8 @@ public class ItemMeta {
 			// build JSONResponse
 			Map<String, Object> responseData = new HashMap<String,Object>();
 			responseData.put("meta", metaData);
+			responseData.put("timestamp", new Date());
+			responseData.put("item_id", itemId);
 			JSONMeta meta = new JSONMeta(JSONMeta.StatusType.SUCCESS, "Metadata retrieved successfully");
 			JSONResponse response = new JSONResponse(meta, responseData);
 			return response.toResponse();

@@ -1,7 +1,10 @@
 package eu.eumssi.api;
 
 import java.net.UnknownHostException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.DefaultValue;
@@ -49,6 +52,7 @@ public class QueuePending {
 	 * @param queueId (required): queue ID
 	 * @param maxItems (optional): maximum number of items (default: 1000)
 	 * @param markItems (optional): mark items as "in_process" (default: True)
+	 * @param filters (optional): dictionary of additional filters to apply (in MongoDB JSON syntax)
 	 * @param key (required): authentication key
 	 * 
 	 * @return Returns item list in JSON format
@@ -82,6 +86,7 @@ public class QueuePending {
 			@QueryParam("queueId") String queueId,
 			@QueryParam("maxItems") @DefaultValue("1000") Integer maxItems,
 			@QueryParam("markItems") @DefaultValue("True") Boolean markItems,
+			@QueryParam("markItems") @DefaultValue("{}") String filters,
 			@QueryParam("key") String key) {
 		try {
 			
@@ -99,11 +104,15 @@ public class QueuePending {
 			}
 			
 			// get item list
-			List<String> itemList = queryManager.getQueuePending(queueId, maxItems, markItems);
+			List<String> itemList = queryManager.getQueuePending(queueId, maxItems, markItems, filters);
 			
 			// build JSONResponse
 			JSONMeta meta = new JSONMeta(JSONMeta.StatusType.SUCCESS, String.format("%d items retrieved successfully",itemList.size()));
-			JSONResponse response = new JSONResponse(meta, itemList);
+			Map<String,Object> data = new HashMap<String,Object>();
+			data.put("items", itemList);
+			data.put("timestamp", new Date());
+			data.put("queue_id", queueId);
+			JSONResponse response = new JSONResponse(meta, data);
 			return response.toResponse();
 		} catch (EumssiException e) {
 			return new JSONResponse(e.getStatusType()).toResponse();

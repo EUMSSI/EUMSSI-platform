@@ -109,6 +109,8 @@ public class QueryManager {
 			log.info("connected to Collection "+this.coll.getName());
 			// create needed indexes
 			this.coll.createIndex(new BasicDBObject("processing.available_data",1));
+			this.coll.createIndex(new BasicDBObject("meta.source.inLanguage",1));
+			this.coll.createIndex(new BasicDBObject("source",1));
 			for (Object queueId : this.queues.keySet()) {
 				this.coll.createIndex(new BasicDBObject(String.format("processing.queues.%s",(String)queueId),1));
 			}
@@ -160,13 +162,14 @@ public class QueryManager {
 	 *  <br><code>StatusType.ERROR_DB_QUERY</code> (Error 401) if an unhandled error occurred during the query execution.
 	 *  <br><code>StatusType.ERROR_UNKNOWN</code> (Error 999) if an unhandled exception is thrown.
 	 */
-	public List<String> getQueuePending(String queueId, Integer maxItems, Boolean markItems) throws EumssiException {
+	public List<String> getQueuePending(String queueId, Integer maxItems, Boolean markItems, String filters) throws EumssiException {
 		DBObject query = null;
 		if (this.queues.containsKey(queueId)) {
 			query = (DBObject) JSON.parse(this.queues.getProperty(queueId));
 			// check that item is not yet (being) processed
-			String testPending = String.format("{\"processing.queues.%s\":{\"$nin\":[\"in_process\"\"processed\"]}}",queueId);
+			String testPending = String.format("{\"processing.queues.%s\":{\"$nin\":[\"in_process\",\"processed\"]}}",queueId);
 			query.putAll((BSONObject) JSON.parse(testPending));
+			query.putAll((BSONObject) JSON.parse(filters)); // apply user-provided filters
 		} else {
 			throw new EumssiException(StatusType.ERROR_INVALID_QUEUE_ID);
 		}
