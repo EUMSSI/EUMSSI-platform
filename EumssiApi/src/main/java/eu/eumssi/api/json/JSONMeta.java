@@ -54,7 +54,7 @@ public class JSONMeta {
 		statusMessages.put(StatusType.ERROR_INVALID_KEY, "Invalid key");
 		statusMessages.put(StatusType.ERROR_INVALID_PARAMS, "Invalid parameters");
 		statusMessages.put(StatusType.ERROR_INVALID_QUEUE_ID, "Invalid queue ID");
-		statusMessages.put(StatusType.ERROR_INVALID_ITEM_ID, "Invalid queue ID");
+		statusMessages.put(StatusType.ERROR_INVALID_ITEM_ID, "Invalid item ID");
 		statusMessages.put(StatusType.ERROR_PARAMETER_NOT_DEFINED, "Parameter not defined");
 		statusMessages.put(StatusType.ERROR_CONFLICT_PARAMS, "Conflict between parameters");
 		statusMessages.put(StatusType.ERROR_PARAMETER_KEY_NOT_DEFINED, "Parameter key (key) not defined");
