@@ -179,7 +179,7 @@ public class QueryManager {
 		for (DBObject res : resCursor) {
 			resList.add(res.get("_id").toString());
 			if (markItems) {
-				coll.update(new BasicDBObject("_id", res.get("_id")), new BasicDBObject("$set", new BasicDBObject("processing_state."+queueId,"in_process")));
+				coll.update(new BasicDBObject("_id", res.get("_id")), new BasicDBObject("$set", new BasicDBObject("processing.queues."+queueId,"in_process")));
 			}
 		}
 		return resList;

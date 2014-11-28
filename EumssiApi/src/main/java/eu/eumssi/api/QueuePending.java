@@ -86,7 +86,7 @@ public class QueuePending {
 			@QueryParam("queueId") String queueId,
 			@QueryParam("maxItems") @DefaultValue("1000") Integer maxItems,
 			@QueryParam("markItems") @DefaultValue("True") Boolean markItems,
-			@QueryParam("markItems") @DefaultValue("{}") String filters,
+			@QueryParam("filters") @DefaultValue("{}") String filters,
 			@QueryParam("key") String key) {
 		try {
 			
