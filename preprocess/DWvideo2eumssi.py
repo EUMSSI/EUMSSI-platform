@@ -7,7 +7,13 @@ from eumssi_converter import EumssiConverter
 
 def transf_date(x):
     # convert from string in DD.MM.YYYY format
-    return datetime.datetime.strptime(x,"%d.%m.%Y")
+    try:
+        return datetime.datetime.strptime(x, "%d.%m.%Y")
+    except ValueError:
+        try:
+            return datetime.datetime.strptime(x, "%Y-%m-%d")
+        except ValueError:
+            return "invalid date format"
 
 
 def transf_lang(x):
