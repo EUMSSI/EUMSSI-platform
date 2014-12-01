@@ -10,11 +10,7 @@ def transf_date(x):
     try:
         return datetime.datetime.strptime(x, "%d.%m.%Y")
     except ValueError:
-        try:
-            return datetime.datetime.strptime(x, "%Y-%m-%d")
-        except ValueError:
-            return "invalid date format"
-
+        return datetime.datetime.strptime(x, "%Y-%m-%d")
 
 def transf_lang(x):
     '''normalize language codes to ISO 639-1'''
