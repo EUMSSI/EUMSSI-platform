@@ -3,7 +3,7 @@
 import datetime
 import json
 from eumssi_converter import EumssiConverter
-
+import click
 
 def transf_date(x):
     '''convert from string in DD.MM.YYYY (or YYYY-MM-DD) format'''
@@ -35,9 +35,16 @@ dw_video_map = [
 ]
 
 
-def main():
+@click.command()
+@click.option('--reset', is_flag=True, help="reset data_available")
+@click.option('--clean', is_flag=True, help="reset data_available and remove existing meta.source")
+def convert(reset, clean):
     conv = EumssiConverter('DW-video', dw_video_map)
+    if reset:
+        conv.reset()
+    if clean:
+        conv.clean()
     conv.run()
 
 if __name__ == '__main__':
-    main()
+    convert()

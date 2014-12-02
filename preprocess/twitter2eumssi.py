@@ -2,6 +2,7 @@
 
 import datetime
 from eumssi_converter import EumssiConverter
+import click
 
 
 def transf_date(x):
@@ -10,10 +11,6 @@ def transf_date(x):
     else:
         # Twitter's weird date format
         return datetime.datetime.strptime(x, '%a %b %d %X +0000 %Y')
-
-
-def transf_lang(x):
-    return x  # Twitter uses two character ISO codes
 
 
 def transf_coordinates(x):
@@ -31,9 +28,16 @@ twitter_map = [
 ]
 
 
-def main():
+@click.command()
+@click.option('--reset', is_flag=True, help="reset data_available")
+@click.option('--clean', is_flag=True, help="reset data_available and remove existing meta.source")
+def convert(reset, clean):
     conv = EumssiConverter('twitter-api-1.1', twitter_map)
+    if reset:
+        conv.reset()
+    if clean:
+        conv.clean()
     conv.run()
 
 if __name__ == '__main__':
-    main()
+    convert()
