@@ -32,6 +32,7 @@ dw_video_map = [
     ['httpMedium', 'httpMedium', None, ['video']],
     ['tags', 'keywords', None, []],
     ['title', 'headline', None, ['text']]
+    ['description', 'text', None, ['text']]
 ]
 
 
