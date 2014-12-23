@@ -37,7 +37,7 @@ class EumssiConverter:
         try:
             print "updated: ", self.col.update({'_id': item_id},
                                                {'$set': {'meta.source': eumssi_meta},
-                                                '$addToSet': {'processing.available_data':{'$each': available_data}}})
+                                                '$addToSet': {'processing.available_data': {'$each': available_data}}})
         except Exception as e:
             print e
 
