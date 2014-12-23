@@ -210,7 +210,7 @@ public class QueryManager {
 					itemMeta.put(f, ((DBObject)((DBObject)res.get("meta")).get("source")).get(f));
 				}
 			} catch (Exception e) { //TODO: better exception handling
-				log.error(String.format("couldn't insert field %s in document %s", f, itemId), e);
+				log.error(String.format("couldn't get field %s from document %s", f, itemId), e);
 			}
 		}
 		log.info(itemMeta);
