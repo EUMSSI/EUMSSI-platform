@@ -35,7 +35,7 @@ class ExtractConverter:
             available_data.add(self.queue)
             print "updated: ", self.col.update({'_id': item_id},
                                                {'$set': {'meta.extracted.{queue}'.format(queue=self.queue): meta},
-                                                '$addToSet': {'processing.available_data': {'$each': available_data}}})
+                                                '$addToSet': {'processing.available_data': {'$each': list(available_data)}}})
         except Exception as e:
             print e
 
