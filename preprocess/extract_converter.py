@@ -21,11 +21,8 @@ class ExtractConverter:
 
     def get_items(self):
         ''' get items to convert '''
-        project = {'result': 'processing.results.{queue}'.format(self.queue)}
-        for f in self.mapping:
-            # flatten document structure (note: maintains inner structure of fields)
-            project[f[0].replace('.', self.SEPARATOR)] = '$meta.original.' + f[0]
-        pipeline = [{'$match': {'processing.queues.{queue}'.format(self.queue): 'processed',
+        project = {'result': '$processing.results.{queue}'.format(queue=self.queue)}
+        pipeline = [{'$match': {'processing.queues.{queue}'.format(queue=self.queue): 'processed',
                               'processing.available_data': {'$ne': self.queue}}},
                     {'$project': project}]
         return self.col.aggregate(pipeline, cursor={})
@@ -37,7 +34,7 @@ class ExtractConverter:
             available_data = set(available_data)
             available_data.add(self.queue)
             print "updated: ", self.col.update({'_id': item_id},
-                                               {'$set': {'meta.extracted.{queue}'.format(self.queue): meta},
+                                               {'$set': {'meta.extracted.{queue}'.format(queue=self.queue): meta},
                                                 '$addToSet': {'processing.available_data': {'$each': available_data}}})
         except Exception as e:
             print e
