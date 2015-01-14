@@ -76,7 +76,7 @@ public class QueueResults {
 	 */
 	@POST
 	@Produces("application/json; charset=utf-8")
-	public Response queuePendingServiceGET(
+	public Response queueResultsPOST(
 			@FormParam("queueId") String queueId,
 			@FormParam("data") String data,
 			@FormParam("key") String key) {
@@ -102,7 +102,7 @@ public class QueueResults {
 			Integer itemNum = queryManager.putResults(queueId, data);
 			
 			// build JSONResponse
-			JSONMeta meta = new JSONMeta(JSONMeta.StatusType.SUCCESS, String.format("%d items retrieved successfully",itemNum));
+			JSONMeta meta = new JSONMeta(JSONMeta.StatusType.SUCCESS, String.format("%d items uploaded successfully",itemNum));
 			JSONResponse response = new JSONResponse(meta);
 			return response.toResponse();
 		} catch (EumssiException e) {
