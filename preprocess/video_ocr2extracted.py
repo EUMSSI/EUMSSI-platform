@@ -17,7 +17,7 @@ def convert(x):
 @click.option('--reset', is_flag=True, help="reset data_available")
 @click.option('--clean', is_flag=True, help="reset data_available and remove existing meta.source")
 def run(reset, clean):
-    conv = ExtractConverter('audio_transcript', convert)
+    conv = ExtractConverter('video_ocr', convert)
     conv.run()
 
 
