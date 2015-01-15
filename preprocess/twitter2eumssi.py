@@ -24,6 +24,7 @@ twitter_map = [
     ['lang', 'inLanguage', None, []],
     ['text', 'text', None, ['text']],
     ['user.id_str', 'author', None, []],
+    ['id_str', 'tweetId', None, []],
     ['coordinates.coordinates', 'contentLocation', transf_coordinates, []]
 ]
 
