@@ -42,24 +42,42 @@
   - Remember to run the JVM in server mode, and use a higher logging level
     that avoids logging every request
 -->
+
 <schema name="eumssi" version="1.5">
+
 <!-- fields required for Solr functionality
    -->
 <field name="_version_" type="long" indexed="true" stored="true"/>
 <field name="_root_" type="string" indexed="true" stored="false"/>
+
 <!-- Only remove the "id" field if you have a very good reason to. While not strictly
      required, it is highly recommended. A <uniqueKey> is present in almost all Solr
      installations. See the <uniqueKey> declaration below where <uniqueKey> is set to "id".
    -->
 <field name="_id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
 <field name="source" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+
 <dynamicField name="meta.source.*" type="text_general" indexed="true" stored="true" required="false" multiValued="false"/>
+<!-- treat as multivalued -->
 <dynamicField name="meta.source.keywords.*" type="ignored"/>
 <field name="meta.source.keywords" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
 <copyField source="meta.source.keywords.*" dest="meta.source.keywords"/>
+
 <field name="meta.source.datePublished" type="tdate" indexed="true" stored="true" required="false" multiValued="false"/>
 <dynamicField name="meta.extracted.*" type="text_general" indexed="true" stored="true" required="false" multiValued="false"/>
+
+<!-- treat as multivalued -->
+<field name="meta.extracted.text.ner" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+<copyField source="meta.extracted.text.ner.*" dest="meta.extracted.text.ner"/>
+<dynamicField name="meta.extracted.text.ner.*" type="ignored"/>
+<field name="meta.extracted.text.dbpedia" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+<copyField source="meta.extracted.text.dbpedia.*" dest="meta.extracted.text.dbpedia"/>
+<dynamicField name="meta.extracted.text.dbpedia.*" type="ignored"/>
+
 <uniqueKey>_id</uniqueKey>
+
+
+
 <!-- The StrField type is not analyzed, but indexed/stored verbatim.
        It supports doc values but in that case the field needs to be
        single-valued and either required or have a default value.
