@@ -69,17 +69,17 @@ public class BasicNerPipeline
 				BaseCasReader.PARAM_MONGODB, mongoDb,
 				BaseCasReader.PARAM_MONGOCOLLECTION, mongoCollection,
 				BaseCasReader.PARAM_FIELDS, "meta.source.headline,meta.source.title,meta.source.description,meta.source.text",
-				BaseCasReader.PARAM_QUERY,"{'meta.source.inLanguage':'en'}",
+				BaseCasReader.PARAM_QUERY,"{'meta.source.inLanguage':'en','processing.available_data': {'$ne': 'ner'}}",
 				BaseCasReader.PARAM_LANG,"{'$literal':'en'}"
 				);
 
 		AnalysisEngineDescription segmenter = createEngineDescription(LanguageToolSegmenter.class);
 
 		AnalysisEngineDescription dbpedia = createEngineDescription(SpotlightAnnotator.class,
-				//SpotlightAnnotator.PARAM_ENDPOINT, "http://localhost:2222/rest/annotate"),
-				//SpotlightAnnotator.PARAM_ENDPOINT, "http://spotlight.dbpedia.org/rest/annotate"),
-				SpotlightAnnotator.PARAM_ENDPOINT, "http://spotlight.sztaki.hu:2222/rest/annotate",
-				//SpotlightAnnotator.PARAM_ENDPOINT, "http://de.dbpedia.org/spotlight/rest/annotate/"),
+				SpotlightAnnotator.PARAM_ENDPOINT, "http://localhost:2222/rest/annotate",
+				//SpotlightAnnotator.PARAM_ENDPOINT, "http://spotlight.dbpedia.org/rest/annotate",
+				//SpotlightAnnotator.PARAM_ENDPOINT, "http://spotlight.sztaki.hu:2222/rest/annotate",
+				//SpotlightAnnotator.PARAM_ENDPOINT, "http://de.dbpedia.org/spotlight/rest/annotate/",
 				SpotlightAnnotator.PARAM_CONFIDENCE, 0.5f);
 
 		AnalysisEngineDescription key = createEngineDescription(KeyPhraseAnnotator.class,
