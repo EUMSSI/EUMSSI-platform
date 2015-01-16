@@ -65,7 +65,7 @@ public class BasicNerPipeline
 
 
 		CollectionReaderDescription reader = createReaderDescription(BaseCasReader.class,
-				//BaseCasReader.PARAM_MAXITEMS,1000,
+				BaseCasReader.PARAM_MAXITEMS,1000,
 				BaseCasReader.PARAM_MONGODB, mongoDb,
 				BaseCasReader.PARAM_MONGOCOLLECTION, mongoCollection,
 				BaseCasReader.PARAM_FIELDS, "meta.source.headline,meta.source.title,meta.source.description,meta.source.text",

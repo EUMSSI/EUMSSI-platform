@@ -66,7 +66,7 @@ public class BaseCasReader extends CasCollectionReader_ImplBase{
 			description="document language (as MongoDB expression)")
 	private String language;
 	public static final String PARAM_MAXITEMS = "MaxItems";
-	@ConfigurationParameter(name=PARAM_MAXITEMS, mandatory=false,
+	@ConfigurationParameter(name=PARAM_MAXITEMS, mandatory=true, defaultValue="1000",
 			description="maximum number of items to retrieve")
 	private Integer maxItems;
 

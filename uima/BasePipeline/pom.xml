@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.eumssi.uima</groupId>
-	<artifactId>EumssiCas</artifactId>
+	<artifactId>BasePipeline</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<build>
 		<plugins>
@@ -14,21 +14,84 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.5.1</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib/</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.2</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<!-- Set the main class of the executable JAR -->
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>eu.eumssi.uima.pipeline.BasicNerPipeline</mainClass>
+								</transformer>
+								<!-- Merge the uimaFIT configuration files -->
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>
+										META-INF/org.apache.uima.fit/fsindexes.txt
+									</resource>
+								</transformer>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>
+										META-INF/org.apache.uima.fit/types.txt
+									</resource>
+								</transformer>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>
+										META-INF/org.apache.uima.fit/typepriorities.txt
+									</resource>
+								</transformer>
+							</transformers>
+							<!-- Prevent huge shaded artifacts from being deployed to a Maven 
+								repository (remove if not desired) -->
+							<outputFile>
+								${project.build.directory}/${artifactId}-${version}-standalone.jar
+							</outputFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-		<dependencyManagement>
+	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
 				<artifactId>de.tudarmstadt.ukp.dkpro.core-asl</artifactId>
-				<version>1.6.2</version>
+				<version>1.7.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
 				<artifactId>de.tudarmstadt.ukp.dkpro.core-gpl</artifactId>
-				<version>1.6.2</version>
+				<version>1.7.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -39,11 +102,6 @@
 			<groupId>EumssiTS</groupId>
 			<artifactId>EumssiTS</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.uima</groupId>
-			<artifactId>uimaj-core</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mongodb</groupId>
@@ -67,20 +125,22 @@
 			<artifactId>uima</artifactId>
 			<version>0.7</version>
 		</dependency>
-				<dependency>
+		<dependency>
 			<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
 			<artifactId>de.tudarmstadt.ukp.dkpro.core.io.xmi-asl</artifactId>
 		</dependency>
-				<dependency>
-					<groupId>com.iai.uima</groupId>
-					<artifactId>kea-annotator</artifactId>
-					<version>0.0.1-SNAPSHOT</version>
-				</dependency>
-				<dependency>
-					<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
-					<artifactId>
-						de.tudarmstadt.ukp.dkpro.core.stanfordnlp-gpl
-					</artifactId>
-				</dependency>
+		<dependency>
+			<groupId>com.iai.uima</groupId>
+			<artifactId>kea-annotator</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
+			<artifactId>de.tudarmstadt.ukp.dkpro.core.stanfordnlp-gpl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.uima</groupId>
+			<artifactId>uimaj-core</artifactId>
+		</dependency>
 	</dependencies>
 </project>
