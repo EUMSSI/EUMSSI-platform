@@ -5,4 +5,4 @@
  * @author jgrivolla
  *
  */
-package eu.eumssi.uima.convert;
+package eu.eumssi.uima.reader;

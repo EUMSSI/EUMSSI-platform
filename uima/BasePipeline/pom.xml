@@ -71,7 +71,7 @@
 							<!-- Prevent huge shaded artifacts from being deployed to a Maven 
 								repository (remove if not desired) -->
 							<outputFile>
-								${project.build.directory}/${artifactId}-${version}-standalone.jar
+								${project.build.directory}/${project.artifactId}-${project.version}-standalone.jar
 							</outputFile>
 						</configuration>
 					</execution>
@@ -123,7 +123,7 @@
 		<dependency>
 			<groupId>org.dbpedia.spotlight</groupId>
 			<artifactId>uima</artifactId>
-			<version>0.7</version>
+			<version>0.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>

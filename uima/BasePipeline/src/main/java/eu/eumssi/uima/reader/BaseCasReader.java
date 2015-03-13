@@ -1,4 +1,4 @@
-package eu.eumssi.uima.convert;
+package eu.eumssi.uima.reader;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class BaseCasReader extends CasCollectionReader_ImplBase{
 			description="the query to select documents")
 	private String queryString;
 	public static final String PARAM_FIELDS = "TextFields";
-	@ConfigurationParameter(name=PARAM_FIELDS, mandatory=false, defaultValue="$text",
+	@ConfigurationParameter(name=PARAM_FIELDS, mandatory=false, defaultValue="text",
 			description="comma separated list of text fields")
 	private String fieldsString;
 	private String[] fieldsList;
@@ -217,7 +217,7 @@ public class BaseCasReader extends CasCollectionReader_ImplBase{
 		}
 		metadata.setDocumentId(documentId);
 		try {
-			metadata.setDocumentTitle(doc.get("headline").toString()); // should be a String field anyway
+			metadata.setDocumentTitle(doc.get("meta###source###headline").toString()); // should be a String field anyway
 		} catch (NullPointerException e) {
 			// just leave text empty if document doesn't have one
 		}
