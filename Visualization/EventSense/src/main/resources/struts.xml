@@ -30,42 +30,11 @@
 			class="de.l3s.eumssi.action.EntityTimelineAction">
 			<result name="EntityTimelineView">/views/TimelineView.jsp</result>
 		</action>
-		
-<!-- 
-		<action name="storyList"
-			class="de.l3s.eumssi.action.StoryListAction">
-			<result name="StoryListView">/views/StoryListView.jsp</result>
-		</action>
-		
-		
-		<action name="entityList"
-			class="de.l3s.eumssi.action.EntityListAction">
-			<result name="EntityListView">/views/EntityListView.jsp</result>
-		</action>
-		
- -->		
 		<action name="ShowEventByDate"
 			class="de.l3s.eumssi.action.ShowEventByDateAction">
 			<result name="TimelineView">/views/TimelineView.jsp</result>
 		</action>
 
-		<action name="StoryListByCategory"
-			class="de.l3s.eumssi.action.StoryListByCategoryAction">
-			<result name="StoryListView">/views/StoryListView.jsp</result>
-		</action>
-		
-		<action name="StoryListByLocation"
-			class="de.l3s.eumssi.action.StoryListByLocationAction">
-			<result name="StoryListView">/views/StoryListView.jsp</result>
-		</action>
-		
-<!-- 
-			<action name="ShowAllCategory"
-				class="de.l3s.eumssi.action.ShowAllCategoryAction">
-				<result name="ShowCategory">/views/ShowAllCategory.jsp</result>
-			</action>
--->		
-			
 	</package>
 
 </struts>
