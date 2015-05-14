@@ -94,7 +94,7 @@ public class AsrReader extends MongoReaderBase {
 					tokenAnno.setEnd(documentText.length());
 					tokenAnno.setBeginTime(beginTime);
 					tokenAnno.setEndTime(endTime);
-					tokenAnno.setConf(conf);
+					tokenAnno.setConfidence(conf);
 					tokenAnno.setTokenType(type);
 					tokenAnno.addToIndexes();
 				}

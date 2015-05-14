@@ -23,6 +23,11 @@
           <description/>
           <rangeTypeName>uima.cas.Integer</rangeTypeName>
         </featureDescription>
+        <featureDescription>
+          <name>confidence</name>
+          <description/>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
+        </featureDescription>
       </features>
     </typeDescription>
     <typeDescription>
@@ -35,11 +40,6 @@
           <description/>
           <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>
-        <featureDescription>
-          <name>conf</name>
-          <description/>
-          <rangeTypeName>uima.cas.Double</rangeTypeName>
-        </featureDescription>
       </features>
     </typeDescription>
     <typeDescription>
@@ -51,6 +51,33 @@
       <name>eu.eumssi.uima.ts.AsrFiller</name>
       <description/>
       <supertypeName>eu.eumssi.uima.ts.AsrToken</supertypeName>
+    </typeDescription>
+        <typeDescription>
+      <name>eu.eumssi.uima.ts.MediaSegment</name>
+      <description/>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>beginTime</name>
+          <description/>
+          <rangeTypeName>uima.cas.Integer</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>endTime</name>
+          <description/>
+          <rangeTypeName>uima.cas.Integer</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>confidence</name>
+          <description/>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>eu.eumssi.uima.ts.OcrSegment</name>
+      <description/>
+      <supertypeName>eu.eumssi.uima.ts.MediaSegment</supertypeName>
     </typeDescription>
   </types>
 </typeSystemDescription>

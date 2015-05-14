@@ -11,7 +11,7 @@ import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.cas.Type;
 
 /** 
- * Updated by JCasGen Wed Mar 25 15:13:34 CET 2015
+ * Updated by JCasGen Thu May 07 16:47:17 CEST 2015
  * @generated */
 public class AsrFiller_Type extends AsrToken_Type {
   /** @generated 

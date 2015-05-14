@@ -13,7 +13,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** 
- * Updated by JCasGen Wed Mar 25 15:13:34 CET 2015
+ * Updated by JCasGen Thu May 07 16:47:17 CEST 2015
  * @generated */
 public class AsrToken_Type extends MediaToken_Type {
   /** @generated 
@@ -68,30 +68,6 @@ public class AsrToken_Type extends MediaToken_Type {
     ll_cas.ll_setStringValue(addr, casFeatCode_tokenType, v);}
     
   
- 
-  /** @generated */
-  final Feature casFeat_conf;
-  /** @generated */
-  final int     casFeatCode_conf;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
-  public double getConf(int addr) {
-        if (featOkTst && casFeat_conf == null)
-      jcas.throwFeatMissing("conf", "eu.eumssi.uima.ts.AsrToken");
-    return ll_cas.ll_getDoubleValue(addr, casFeatCode_conf);
-  }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
-  public void setConf(int addr, double v) {
-        if (featOkTst && casFeat_conf == null)
-      jcas.throwFeatMissing("conf", "eu.eumssi.uima.ts.AsrToken");
-    ll_cas.ll_setDoubleValue(addr, casFeatCode_conf, v);}
-    
-  
 
 
 
@@ -107,10 +83,6 @@ public class AsrToken_Type extends MediaToken_Type {
  
     casFeat_tokenType = jcas.getRequiredFeatureDE(casType, "tokenType", "uima.cas.String", featOkTst);
     casFeatCode_tokenType  = (null == casFeat_tokenType) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_tokenType).getCode();
-
- 
-    casFeat_conf = jcas.getRequiredFeatureDE(casType, "conf", "uima.cas.Double", featOkTst);
-    casFeatCode_conf  = (null == casFeat_conf) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_conf).getCode();
 
   }
 }

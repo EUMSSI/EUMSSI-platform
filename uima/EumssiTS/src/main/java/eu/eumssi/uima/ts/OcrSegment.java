@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Wed Mar 25 14:55:19 CET 2015 */
+/* First created by JCasGen Thu May 07 16:47:17 CEST 2015 */
 package eu.eumssi.uima.ts;
 
 import org.apache.uima.jcas.JCas; 
@@ -13,12 +13,12 @@ import org.apache.uima.jcas.cas.TOP_Type;
  * Updated by JCasGen Thu May 07 16:47:17 CEST 2015
  * XML source: /home/jgrivolla/GitHub/EUMSSI-platform/uima/EumssiTS/src/main/resources/eu/eumssi/uima/ts/media.xml
  * @generated */
-public class AsrWord extends AsrToken {
+public class OcrSegment extends MediaSegment {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(AsrWord.class);
+  public final static int typeIndexID = JCasRegistry.register(OcrSegment.class);
   /** @generated
    * @ordered 
    */
@@ -32,14 +32,14 @@ public class AsrWord extends AsrToken {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected AsrWord() {/* intentionally empty block */}
+  protected OcrSegment() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public AsrWord(int addr, TOP_Type type) {
+  public OcrSegment(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -47,7 +47,7 @@ public class AsrWord extends AsrToken {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public AsrWord(JCas jcas) {
+  public OcrSegment(JCas jcas) {
     super(jcas);
     readObject();   
   } 
@@ -57,7 +57,7 @@ public class AsrWord extends AsrToken {
    * @param begin offset to the begin spot in the SofA
    * @param end offset to the end spot in the SofA 
   */  
-  public AsrWord(JCas jcas, int begin, int end) {
+  public OcrSegment(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
     setEnd(end);

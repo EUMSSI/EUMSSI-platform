@@ -10,7 +10,7 @@ import org.apache.uima.jcas.cas.TOP_Type;
 
 
 /** 
- * Updated by JCasGen Wed Mar 25 15:13:34 CET 2015
+ * Updated by JCasGen Thu May 07 16:47:17 CEST 2015
  * XML source: /home/jgrivolla/GitHub/EUMSSI-platform/uima/EumssiTS/src/main/resources/eu/eumssi/uima/ts/media.xml
  * @generated */
 public class AsrToken extends MediaToken {
@@ -95,28 +95,6 @@ public class AsrToken extends MediaToken {
     if (AsrToken_Type.featOkTst && ((AsrToken_Type)jcasType).casFeat_tokenType == null)
       jcasType.jcas.throwFeatMissing("tokenType", "eu.eumssi.uima.ts.AsrToken");
     jcasType.ll_cas.ll_setStringValue(addr, ((AsrToken_Type)jcasType).casFeatCode_tokenType, v);}    
-   
-    
-  //*--------------*
-  //* Feature: conf
-
-  /** getter for conf - gets 
-   * @generated
-   * @return value of the feature 
-   */
-  public double getConf() {
-    if (AsrToken_Type.featOkTst && ((AsrToken_Type)jcasType).casFeat_conf == null)
-      jcasType.jcas.throwFeatMissing("conf", "eu.eumssi.uima.ts.AsrToken");
-    return jcasType.ll_cas.ll_getDoubleValue(addr, ((AsrToken_Type)jcasType).casFeatCode_conf);}
-    
-  /** setter for conf - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setConf(double v) {
-    if (AsrToken_Type.featOkTst && ((AsrToken_Type)jcasType).casFeat_conf == null)
-      jcasType.jcas.throwFeatMissing("conf", "eu.eumssi.uima.ts.AsrToken");
-    jcasType.ll_cas.ll_setDoubleValue(addr, ((AsrToken_Type)jcasType).casFeatCode_conf, v);}    
   }
 
     
