@@ -22,6 +22,8 @@ import de.tudarmstadt.ukp.dkpro.core.io.text.TextReader;
 import de.tudarmstadt.ukp.dkpro.core.io.xmi.XmiWriter;
 import de.tudarmstadt.ukp.dkpro.core.languagetool.LanguageToolSegmenter;
 import de.tudarmstadt.ukp.dkpro.core.stanfordnlp.StanfordNamedEntityRecognizer;
+import edu.upf.glicom.uima.babelfy.BabelfyAnnotator;
+import edu.upf.glicom.uima.types.BabelfyResource;
 
 
 /**
@@ -40,7 +42,7 @@ public class TestingNerPipeline
 		String mongoUri = "mongodb://localhost"; // this is the default, so not needed
 		
 		CollectionReaderDescription reader = createReaderDescription(TextReader.class,
-                TextReader.PARAM_SOURCE_LOCATION, "input/encoding.txt", 
+                TextReader.PARAM_SOURCE_LOCATION, "input/en/*", 
                 TextReader.PARAM_LANGUAGE, "en");
 		
 //		CollectionReaderDescription reader = createReaderDescription(BaseCasReader.class,
@@ -69,6 +71,12 @@ public class TestingNerPipeline
 
 		AnalysisEngineDescription ner = createEngineDescription(StanfordNamedEntityRecognizer.class);
 
+		AnalysisEngineDescription babelfy = createEngineDescription(BabelfyAnnotator.class,
+				BabelfyAnnotator.PARAM_ENDPOINT, "https://babelfy.io/v1",
+				BabelfyAnnotator.PARAM_KEY, "KEY",
+				SpotlightAnnotator.PARAM_ALL_CANDIDATES, true);
+
+		
 		AnalysisEngineDescription xmiWriter = createEngineDescription(XmiWriter.class,
 				XmiWriter.PARAM_TARGET_LOCATION, "output",
 				XmiWriter.PARAM_TYPE_SYSTEM_FILE, "output/TypeSystem.xml");
@@ -76,9 +84,10 @@ public class TestingNerPipeline
 		JCasIterable pipeline = new JCasIterable(
 				reader,
 				segmenter,
-				dbpedia,
+				//dbpedia,
 				//key,
-				ner,
+				//ner,
+				babelfy,
 				xmiWriter
 				);
 
@@ -100,6 +109,15 @@ public class TestingNerPipeline
 						resource.getTypes());
 			}
 
+			System.out.printf("%n  -- Babelfy --%n");
+			for (BabelfyResource babel : select(jcas, BabelfyResource.class)) {
+				System.out.printf("  %-16s\t%-10s\t%-10s%n", 
+						babel.getCoveredText(),
+						babel.getBabelNetURL(),
+						babel.getDBpediaURL());
+			}
+
+			System.out.printf("%n  -- Stanford NER --%n");
 			for (NamedEntity entity : select(jcas, NamedEntity.class)) {
 				System.out.printf("  %-16s %-10s %n", 
 						entity.getCoveredText(),
