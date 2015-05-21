@@ -74,7 +74,7 @@ public class TestingNerPipeline
 		AnalysisEngineDescription babelfy = createEngineDescription(BabelfyAnnotator.class,
 				BabelfyAnnotator.PARAM_ENDPOINT, "https://babelfy.io/v1",
 				BabelfyAnnotator.PARAM_KEY, "KEY",
-				SpotlightAnnotator.PARAM_ALL_CANDIDATES, true);
+				BabelfyAnnotator.PARAM_LANG, "EN");
 
 		
 		AnalysisEngineDescription xmiWriter = createEngineDescription(XmiWriter.class,
