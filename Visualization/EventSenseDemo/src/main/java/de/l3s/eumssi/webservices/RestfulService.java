@@ -20,6 +20,12 @@ import javax.ws.rs.core.MediaType;
 import org.apache.struts2.ServletActionContext;
 import org.json.JSONArray;
 
+
+/** eg.
+ * http://pharos.l3s.uni-hannover.de:8485/EventSense/webresources/WebService/getWordCloud/json/text/news/germany
+ * @author giangbinhtran
+ *
+ */
 @Path("/WebService")
 public class RestfulService {
 	
