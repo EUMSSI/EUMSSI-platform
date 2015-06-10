@@ -200,17 +200,16 @@ public class QueryManager {
 			throw new EumssiException(StatusType.ERROR_INVALID_ITEM_ID);			
 		}
 		Map<String, Object> itemMeta = new HashMap<String,Object>();
-		for (String f : fields) { //TODO: should allow for "meta.extracted" fields
+		for (String field : fields) {
 			try {
-				if (f.equals("CAS")) {
-					itemMeta.put("CAS", (DBObject)((DBObject)res.get("cas")).get("json"));
-				} else if (f.equals("*")) {
-					itemMeta.put("*", (DBObject)((DBObject)res.get("meta")).get("source"));
-				} else {
-					itemMeta.put(f, ((DBObject)((DBObject)res.get("meta")).get("source")).get(f));
+				//DBObject fieldV = (DBObject)res.get("meta");
+				Object value = res;
+				for (String f : field.split("\\.")) {
+					value = f.equals("*")? value : ((DBObject) value).get(f);
 				}
+				itemMeta.put(field, value);
 			} catch (Exception e) { //TODO: better exception handling
-				log.error(String.format("couldn't get field %s from document %s", f, itemId), e);
+				log.error(String.format("couldn't get field %s from document %s", field, itemId), e);
 			}
 		}
 		log.info(itemMeta);
@@ -229,9 +228,9 @@ public class QueryManager {
 		for (Object item : jsonData) {
 			try {
 				String itemId = (String) ((DBObject)item).get("content_id");
-			WriteResult r = coll.update(new BasicDBObject("_id", UUID.fromString(itemId)), new BasicDBObject("$set", new BasicDBObject("processing.results."+queueId,((DBObject) item).get("result"))));
-			coll.update(new BasicDBObject("_id", UUID.fromString(itemId)), new BasicDBObject("$set", new BasicDBObject("processing.queues."+queueId,"processed")));
-			updatedCount += r.getN();
+				WriteResult r = coll.update(new BasicDBObject("_id", UUID.fromString(itemId)), new BasicDBObject("$set", new BasicDBObject("processing.results."+queueId,((DBObject) item).get("result"))));
+				coll.update(new BasicDBObject("_id", UUID.fromString(itemId)), new BasicDBObject("$set", new BasicDBObject("processing.queues."+queueId,"processed")));
+				updatedCount += r.getN();
 			} catch (Exception e) { //TODO: better exception handling
 				log.error(String.format("couldn't insert data in document %s", item), e);				
 			}
