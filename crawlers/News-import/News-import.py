@@ -10,8 +10,8 @@ from os.path import isdir, join
 
 
 class StatusWriter():
-  #mongo_client = pymongo.MongoClient()
-  mongo_client = pymongo.MongoClient("pharos.l3s.uni-hannover.de")
+  mongo_client = pymongo.MongoClient()
+  
   db = mongo_client['eumssi_db']
   col = db['content_items']
 
@@ -52,6 +52,6 @@ def readJsonData(_param_data_file, source):
         writer.write_status(item, source)
 
 if __name__ == '__main__':
-  _param_data_file = "/Work/EUMSSI/data/news/fracking_news_02122014.json"
+  _param_data_file = sys.argv[1]
   source = "Eumssi-News-Crawler"
   readJsonData(_param_data_file, source)
