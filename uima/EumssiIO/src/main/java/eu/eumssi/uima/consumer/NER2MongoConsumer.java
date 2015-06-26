@@ -140,6 +140,8 @@ public class NER2MongoConsumer extends JCasConsumer_ImplBase {
 		if (types.matches(".*Person.*")) typeSet.add("PERSON");
 		if (types.matches(".*Place.*")) typeSet.add("LOCATION");
 		if (types.matches(".*Organisation.*")) typeSet.add("ORGANIZATION");
+		if (types.matches(".*City.*")) typeSet.add("City");
+		if (types.matches(".*Country.*")) typeSet.add("Country");
 		if (typeSet.isEmpty()) {
 			typeSet.add("other");
 		}
