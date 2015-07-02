@@ -1,3 +1,5 @@
 solr/content_items/data/
 lib/
 local/
+bin/
+include/
