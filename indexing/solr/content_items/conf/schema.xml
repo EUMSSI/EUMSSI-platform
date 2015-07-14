@@ -95,6 +95,11 @@
 <field name="meta.extracted.text.dbpedia.other" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
 <copyField source="meta.extracted.text.dbpedia.other.*" dest="meta.extracted.text.dbpedia.other"/>
 
+<field name="meta.extracted.text.dbpedia.country" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+<copyField source="meta.extracted.text.dbpedia.country.*" dest="meta.extracted.text.dbpedia.other"/>
+<field name="meta.extracted.text.dbpedia.city" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+<copyField source="meta.extracted.text.dbpedia.city.*" dest="meta.extracted.text.dbpedia.other"/>
+
 <uniqueKey>_id</uniqueKey>
 
 
