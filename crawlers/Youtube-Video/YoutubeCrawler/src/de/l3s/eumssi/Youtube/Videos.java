@@ -22,7 +22,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 
 public class Videos {
-	static String _DATA_LOCATION="/Work/EUMSSI/data/youtube/jsonraw";
+	static String _DATA_LOCATION="/Work/EUMSSI/data/youtube/jsonrawtest";
+	
 	//compiled list from the Guardian topics
 	static String[] keywords = new String[] 
 			{
@@ -38,6 +39,7 @@ public class Videos {
 			"deutschewelleenglish"
 			};
 	public static void crawlJsonFromYoutube(String keyword) throws IOException {
+		new File(_DATA_LOCATION).mkdir();
 		HttpResponse response = null;
 		HttpClient httpclient = null;
 		HttpGet httpget = null;
