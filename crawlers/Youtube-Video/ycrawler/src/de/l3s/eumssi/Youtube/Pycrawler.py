@@ -13,7 +13,7 @@ from apiclient.discovery import build
 from apiclient.errors import HttpError
 from oauth2client.tools import argparser
 import urllib, urllib2
-from boto.dynamodb.condition import NULL
+
 
 
 
@@ -102,7 +102,7 @@ def getVideoMeta(vid):
         comments = json.loads(commentThreads)
         comment_items += comments["items"]
         pageToken= comments["nextPageToken"]
-        if pageToken != NULL and len(pageToken) >10 :
+        if not pageToken is None and len(pageToken) >10 :
             comments_to_request = COMMENT_URL + "&videoId=" + vid  + "&pageToken=" + comments["nextPageToken"] 
         else:
             break
