@@ -33,7 +33,7 @@ twitter_map = [
 @click.option('--reset', is_flag=True, help="reset data_available")
 @click.option('--clean', is_flag=True, help="reset data_available and remove existing meta.source")
 def convert(reset, clean):
-    conv = EumssiConverter('twitter-api-1.1', twitter_map)
+    conv = EumssiConverter('twitter-api-1.1', twitter_map, coll_name="tweets")
     if reset:
         conv.reset()
     if clean:

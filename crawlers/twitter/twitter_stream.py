@@ -12,6 +12,9 @@ class EumssiStreamer(TwythonStreamer):
   mongo_client = pymongo.MongoClient()
   db = mongo_client['eumssi_db']
   col = db['tweets']
+  col.create_index("source")
+  print "created index source"
+
 
   def on_success(self, status):
     ''' write tweet to MongoDB '''
