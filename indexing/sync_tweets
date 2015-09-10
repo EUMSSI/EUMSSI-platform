@@ -1,7 +1,7 @@
 #!/bin/sh
 mongo-connector -m localhost:27017 \
 -t http://localhost:8983/solr/content_items \
--d ./lib/python2.7/site-packages/mongo_connector/doc_managers/solr_doc_manager.py \
+-d solr_doc_manager \
 -n eumssi_db.tweets \
 --auto-commit-interval=10 \
 --oplog-ts tweets.timestamp
