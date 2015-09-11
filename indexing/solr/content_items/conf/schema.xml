@@ -56,6 +56,7 @@
    -->
 <field name="_id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
 <field name="source" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+<field name="meta.source.inLanguage" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
 
 <dynamicField name="meta.source.*" type="text_general" indexed="true" stored="true" required="false" multiValued="false"/>
 <!-- treat as multivalued -->
