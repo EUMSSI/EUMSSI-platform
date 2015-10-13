@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -184,6 +183,46 @@ public class QueryManager {
 		}
 		return resList;
 	}
+
+	/**
+	 * Reset list of pending content items to process
+	 * 
+	 * @param queueId ID of processing queue
+	 * @param inProcessOnly only reset items marked as "in_process"
+	 * @return number of reset items
+	 * @throws EumssiException with a specific StatusType, if one of the following scenarios occurs:
+	 *  <br>
+	 *  <br><code>StatusType.ERROR_INVALID_QUEUE_ID</code> (Error 102) if the specified queue id does not correspond to a valid queue.
+	 *  <br>
+	 *	<br><code>StatusType.ERROR_DB_CONNECT</code> (Error 400) if an unhandled error occurred during acquisition of the database connection.
+	 *  <br><code>StatusType.ERROR_DB_QUERY</code> (Error 401) if an unhandled error occurred during the query execution.
+	 *  <br><code>StatusType.ERROR_UNKNOWN</code> (Error 999) if an unhandled exception is thrown.
+	 */
+	public Integer resetQueue(String queueId, Boolean inProcessOnly, String filters) throws EumssiException {
+		DBObject query = null;
+		if (this.queues.containsKey(queueId)) {
+			query = (DBObject) JSON.parse(this.queues.getProperty(queueId));
+			// check that item is marked as in_process
+			String testReset = String.format("{\"processing.queues.%s\":\"in_process\"}", queueId);
+			if (!inProcessOnly) { // reset all items, even if already processed
+				testReset = String.format("{\"processing.queues.%s\":{\"$in\":[\"in_process\",\"processed\"]}}", queueId);
+			}
+			query.putAll((BSONObject) JSON.parse(testReset));
+			query.putAll((BSONObject) JSON.parse(filters)); // apply user-provided filters
+		} else {
+			throw new EumssiException(StatusType.ERROR_INVALID_QUEUE_ID);
+		}
+		try {
+			log.info("performing query "+query.toString()+" on collection "+this.coll.toString());
+			WriteResult r = coll.update(query, new BasicDBObject("$set", new BasicDBObject("processing.results."+queueId,"pending")));
+			Integer updatedCount = r.getN();
+			return updatedCount;}
+		catch (Exception e) {
+			// TODO: better handle possible failures
+			throw new EumssiException(StatusType.ERROR_UNKNOWN);
+		}
+	}
+
 
 	/**
 	 * TODO: document method 
