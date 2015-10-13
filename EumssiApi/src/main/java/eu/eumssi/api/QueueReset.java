@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import javax.servlet.ServletConfig;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -102,6 +103,16 @@ public class QueueReset {
 			return new JSONResponse(JSONMeta.StatusType.ERROR_UNKNOWN).toResponse();
 		}
 
+	}
+
+	@GET
+	@Produces("application/json; charset=utf-8")
+	public Response queueResultsGET(
+			@QueryParam("queueId") String queueId,
+			@QueryParam("filters") String filters,
+			@QueryParam("inProcessOnly") @DefaultValue("True") Boolean inProcessOnly,
+			@QueryParam("key") String key) {
+		return queueResultsPOST(queueId, filters, inProcessOnly, key);
 	}
 
 	static private boolean isNull(Object... objects) {
