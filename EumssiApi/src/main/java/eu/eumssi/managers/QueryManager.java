@@ -280,7 +280,7 @@ public class QueryManager {
 		return updatedCount;
 	}
 
-	public void feedbackReport(String state, String comment, String type) throws EumssiException {
+	public void feedbackReport(String state, String comment, String type, String user) throws EumssiException {
 		try {
 			BasicDBObject report = new BasicDBObject();
 			report.append("state", state);
@@ -289,8 +289,26 @@ public class QueryManager {
 			BasicDBObject feedback = new BasicDBObject();
 			feedback.append("report", report);
 			feedback.append("type", "report");
+			if (user != null) {
+				feedback.append("user", user);
+			}
 			feedbackCollection.insert(feedback);
 		} catch (Exception e) {
+			// TODO: better exception handling
+			throw new EumssiException(StatusType.ERROR_UNKNOWN);
+		}
+	}
+
+	public void feedbackAction(String user, String item, String type, String detail) throws EumssiException {
+		try {
+			BasicDBObject feedback = new BasicDBObject();
+			feedback.append("user", user);
+			feedback.append("item", item);
+			feedback.append("type", type);
+			feedback.append("detail", detail);
+			feedbackCollection.insert(feedback);
+		} catch (Exception e) {
+			// TODO: better exception handling
 			throw new EumssiException(StatusType.ERROR_UNKNOWN);
 		}
 	}

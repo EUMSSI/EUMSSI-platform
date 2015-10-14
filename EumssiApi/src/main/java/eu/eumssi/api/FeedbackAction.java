@@ -28,7 +28,7 @@ import eu.eumssi.managers.QueryManager;
  * 
  */
 @Path("/feedback/report")
-public class FeedbackReport {
+public class FeedbackAction {
 
 	/**
 	 * Logger for this class and subclasses.
@@ -40,17 +40,17 @@ public class FeedbackReport {
 
 	private QueryManager queryManager;
 
-	public FeedbackReport() throws UnknownHostException, EumssiException {
+	public FeedbackAction() throws UnknownHostException, EumssiException {
 		this.queryManager = QueryManager.getInstance();
 	}
 
 	/**
 	 * Report a problem with the EUMSSI system
 	 * 
-	 * @param state (required): the system state to reproduce the problem
-	 * @param comment: comment to describe the problem (free form)
-	 * @param type: type of report (e.g. bug, suggestion, ...)
-	 * @param user: optionally, a user name can be provided
+	 * @param user (required): user id
+	 * @param item: item id
+	 * @param type: type of action (e.g. like, dislike, watch, click, ...)
+	 * @param detail: additional detail information (free form, e.g. for debugging)
 	 * 
 	 * @return Returns status message confirming the action
 	 * 
@@ -63,13 +63,13 @@ public class FeedbackReport {
 	 */
 	@POST
 	@Produces("application/json; charset=utf-8")
-	public Response feedbackReportPOST(
-			@FormParam("state") String state,
-			@FormParam("comment") String comment,
+	public Response feedbackActionPOST(
+			@FormParam("user") String user,
+			@FormParam("item") String item,
 			@FormParam("type") String type,
-			@FormParam("user") String user) {
+			@FormParam("detail") String detail) {
 		try {
-			queryManager.feedbackReport(state, comment, type, user);
+			queryManager.feedbackAction(user, item, type, detail);
 			// build JSONResponse
 			JSONMeta meta = new JSONMeta(JSONMeta.StatusType.SUCCESS, "feedback recorded");
 			JSONResponse response = new JSONResponse(meta);
@@ -85,12 +85,12 @@ public class FeedbackReport {
 
 	@GET
 	@Produces("application/json; charset=utf-8")
-	public Response feedbackReportGET(
-			@QueryParam("state") String state,
-			@QueryParam("comment") String comment,
+	public Response feedbackActionGET(
+			@QueryParam("user") String user,
+			@QueryParam("item") String item,
 			@QueryParam("type") String type,
-			@QueryParam("user") String user) {
-		return feedbackReportPOST(state, comment, type, user);
+			@QueryParam("detail") String detail) {
+		return feedbackActionPOST(user, item, type, detail);
 	}
 
 	static private boolean isNull(Object... objects) {
