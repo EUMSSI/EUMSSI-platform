@@ -64,8 +64,8 @@ public class QueryManager {
 
 	private MongoClient m;
 	private DB db;
-	private DBCollection coll;
-
+	private DBCollection collection;
+	private DBCollection feedbackCollection;
 
 
 	/**
@@ -87,12 +87,13 @@ public class QueryManager {
 	 * @throws EumssiException 
 	 */
 	private QueryManager() throws EumssiException{
-		String dbName, collectionName;
+		String dbName, collectionName, feedbackCollectionName;
 		try {
 			loadProperties();
 			this.mongoURI = this.properties.getProperty("mongoURI");
 			dbName = this.properties.getProperty("mongoDB");
 			collectionName = this.properties.getProperty("mongoCollection");
+			feedbackCollectionName = this.properties.getProperty("feedbackMongoCollection");
 			this.apiKey = this.properties.getProperty("apiKey");
 		} catch (Exception e) {
 			log.error("Error loading properties file", e);
@@ -104,14 +105,16 @@ public class QueryManager {
 			//m.getDatabaseNames();// to test connection
 			this.db = m.getDB(dbName);
 			log.info("connected to DB "+this.db.getName());
-			this.coll = db.getCollection(collectionName);
-			log.info("connected to Collection "+this.coll.getName());
+			this.collection = db.getCollection(collectionName);
+			log.info("connected to Collection "+this.collection.getName());
+			this.feedbackCollection = db.getCollection(feedbackCollectionName);
+			log.info("connected to Collection "+this.feedbackCollection.getName());
 			// create needed indexes
-			this.coll.createIndex(new BasicDBObject("processing.available_data",1));
-			this.coll.createIndex(new BasicDBObject("meta.source.inLanguage",1));
-			this.coll.createIndex(new BasicDBObject("source",1));
+			this.collection.createIndex(new BasicDBObject("processing.available_data",1));
+			this.collection.createIndex(new BasicDBObject("meta.source.inLanguage",1));
+			this.collection.createIndex(new BasicDBObject("source",1));
 			for (Object queueId : this.queues.keySet()) {
-				this.coll.createIndex(new BasicDBObject(String.format("processing.queues.%s",(String)queueId),1));
+				this.collection.createIndex(new BasicDBObject(String.format("processing.queues.%s",(String)queueId),1));
 			}
 		} catch (UnknownHostException e) {
 			log.error("Error setting up DB connection", e);
@@ -172,13 +175,13 @@ public class QueryManager {
 		} else {
 			throw new EumssiException(StatusType.ERROR_INVALID_QUEUE_ID);
 		}
-		log.info("performing query "+query.toString()+" on collection "+this.coll.toString());
-		DBCursor resCursor = this.coll.find(query, new BasicDBObject("_id", 1)).limit(maxItems);
+		log.info("performing query "+query.toString()+" on collection "+this.collection.toString());
+		DBCursor resCursor = this.collection.find(query, new BasicDBObject("_id", 1)).limit(maxItems);
 		List<String> resList = new ArrayList<String>();
 		for (DBObject res : resCursor) {
 			resList.add(res.get("_id").toString());
 			if (markItems) {
-				coll.update(new BasicDBObject("_id", res.get("_id")), new BasicDBObject("$set", new BasicDBObject("processing.queues."+queueId,"in_process")));
+				collection.update(new BasicDBObject("_id", res.get("_id")), new BasicDBObject("$set", new BasicDBObject("processing.queues."+queueId,"in_process")));
 			}
 		}
 		return resList;
@@ -213,8 +216,8 @@ public class QueryManager {
 			throw new EumssiException(StatusType.ERROR_INVALID_QUEUE_ID);
 		}
 		try {
-			log.info("performing query "+query.toString()+" on collection "+this.coll.toString());
-			WriteResult r = coll.update(query, new BasicDBObject("$set", new BasicDBObject("processing.results."+queueId,"pending")));
+			log.info("performing query "+query.toString()+" on collection "+this.collection.toString());
+			WriteResult r = collection.update(query, new BasicDBObject("$set", new BasicDBObject("processing.results."+queueId,"pending")));
 			Integer updatedCount = r.getN();
 			return updatedCount;}
 		catch (Exception e) {
@@ -233,8 +236,8 @@ public class QueryManager {
 	 */
 	public Map<String, Object> getItemMeta(String itemId, String[] fields) throws EumssiException {
 		DBObject query = new BasicDBObject("_id", UUID.fromString(itemId));
-		log.info("performing query "+query.toString()+" on collection "+this.coll.toString());
-		DBObject res = this.coll.findOne(query); // TODO should only retrieve required fields from DB
+		log.info("performing query "+query.toString()+" on collection "+this.collection.toString());
+		DBObject res = this.collection.findOne(query); // TODO should only retrieve required fields from DB
 		if (res == null) {
 			throw new EumssiException(StatusType.ERROR_INVALID_ITEM_ID);			
 		}
@@ -267,14 +270,29 @@ public class QueryManager {
 		for (Object item : jsonData) {
 			try {
 				String itemId = (String) ((DBObject)item).get("content_id");
-				WriteResult r = coll.update(new BasicDBObject("_id", UUID.fromString(itemId)), new BasicDBObject("$set", new BasicDBObject("processing.results."+queueId,((DBObject) item).get("result"))));
-				coll.update(new BasicDBObject("_id", UUID.fromString(itemId)), new BasicDBObject("$set", new BasicDBObject("processing.queues."+queueId,"processed")));
+				WriteResult r = collection.update(new BasicDBObject("_id", UUID.fromString(itemId)), new BasicDBObject("$set", new BasicDBObject("processing.results."+queueId,((DBObject) item).get("result"))));
+				collection.update(new BasicDBObject("_id", UUID.fromString(itemId)), new BasicDBObject("$set", new BasicDBObject("processing.queues."+queueId,"processed")));
 				updatedCount += r.getN();
 			} catch (Exception e) { //TODO: better exception handling
 				log.error(String.format("couldn't insert data in document %s", item), e);				
 			}
 		}
 		return updatedCount;
+	}
+
+	public void feedbackReport(String state, String comment, String type) throws EumssiException {
+		try {
+			BasicDBObject report = new BasicDBObject();
+			report.append("state", state);
+			report.append("comment", comment);
+			report.append("reportType", type);
+			BasicDBObject feedback = new BasicDBObject();
+			feedback.append("report", report);
+			feedback.append("type", "report");
+			feedbackCollection.insert(feedback);
+		} catch (Exception e) {
+			throw new EumssiException(StatusType.ERROR_UNKNOWN);
+		}
 	}
 
 }
