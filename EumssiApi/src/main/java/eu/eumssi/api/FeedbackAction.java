@@ -3,7 +3,6 @@ package eu.eumssi.api;
 import java.net.UnknownHostException;
 
 import javax.servlet.ServletConfig;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -27,7 +26,7 @@ import eu.eumssi.managers.QueryManager;
  * @author jens.grivolla
  * 
  */
-@Path("/feedback/report")
+@Path("/feedback/action")
 public class FeedbackAction {
 
 	/**
