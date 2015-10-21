@@ -28,7 +28,7 @@ mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_functi
 dw_video_map = [
     ['dateText', 'datePublished', transf_date, []],
     ['language', 'inLanguage', transf_lang, []],
-    ['httpHigh', 'httpHigh', None, ['video']],
+    ['httpHigh', 'mediaurl', None, ['video']],
     ['httpMedium', 'httpMedium', None, ['video']],
     ['tags', 'keywords', None, []],
     ['title', 'headline', None, ['text']],
