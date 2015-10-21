@@ -17,7 +17,7 @@ def transf_date(x):
 
 def transf_lang(lang): 
     #by default, we only look for en videos, however,
-    # it may contains other languages, it needs to detect automatically later
+    
     return "en" 
 
 
@@ -29,7 +29,7 @@ youtube_video_map = [
 ['id', 'youtubeVideoID', None, []],
 ['uploaded', 'datePublished', transf_date, []],
 ['language', 'inLanguage', transf_lang, []],
-['content.5', 'httpHigh', None, ['video']],
+['content.5', 'mediaurl', None, ['video']],
 ['content.1', 'rtspLow', None, ['video']],
 ['content.6', 'rtspHigh', None, ['video']],
 ['description', 'text', None, ['text']],
