@@ -19,7 +19,7 @@ class StatusWriter():
     ''' write video meta to Mongodb '''
     try:
       twuid = uuid.uuid4()
-      print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source': source,'meta':{'original':item, 'original_format':'eumssi-crawler-v102014'}})
+      print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source': source,'meta':{'original':item, 'original_format':'eumssi-crawler-v102015'}})
     except Exception as e:
       print e
 
@@ -40,15 +40,15 @@ def readJsonData(_param_data_file, source):
         i+=1
         print i, " item indexed "
         #update language 
-        item["language"] = "EN"
+        item["language"] = "en"
         if item["sourceLabel"] =="GreenPower-Zeit":
-            item["language"]="DE"
+            item["language"]="de"
         if item["sourceLabel"] =="GreenPower-elpais":
-            item["language"]="ES"
+            item["language"]="es"
         if item["sourceLabel"] =="GreenPower-lemonde":
-            item["language"]="FR"
+            item["language"]="fr"
         if item["sourceLabel"] =="GreenPower-Guardian":
-            item["language"]="EN"
+            item["language"]="en"
         writer.write_status(item, source)
 
 if __name__ == '__main__':

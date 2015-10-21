@@ -14,17 +14,17 @@ def transf_date(x):
         return datetime.datetime.strptime(x[:-2],'%Y-%m-%d %H:%M:%S') #2014-02-24 17:57:12.0 for example
 
 def transf_lang(lang):
-    return lang #Twitter uses two character ISO codes
+    return lang.lower() 
 
 def transf_source(sourceLabel):
     if sourceLabel.find("lemonde") >-1:
-        return "LEMONDE"
+        return "Le Monde"
     if sourceLabel.find("Zeit") >-1:
-        return "ZEIT"
+        return "Zeit"
     if sourceLabel.find("elpais") >-1:
-        return "EL PAIS"
+        return "El Pais"
     if sourceLabel.find("Guardian") >-1:
-        return "GUARDIAN"
+        return "Guardian"
     return sourceLabel #in other cases
 
 '''
@@ -34,7 +34,7 @@ mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_functi
 news_map = [
     ['publisheddate', 'datePublished', transf_date, []],
     ['language', 'inLanguage', transf_lang, []],
-    ['link', 'url', None, ['url']],
+    ['link', 'mediaurl', None, ['url']],
     ['content', 'text', None, ['text']],
     ['page', 'page', None, ['htmlsource']],
     ['description', 'description', None, ['text']],
