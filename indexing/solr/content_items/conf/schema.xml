@@ -63,10 +63,25 @@
   <field indexed="true" multiValued="false" name="meta.source.inLanguage" required="false" stored="true" type="string"/>
 
   <dynamicField indexed="true" multiValued="false" name="meta.source.*" required="false" stored="true" type="text_general"/>
-<!-- treat as multivalued -->
+  <!-- treat as multivalued -->
   <dynamicField name="meta.source.keywords.*" type="ignored"/>
   <field indexed="true" multiValued="true" name="meta.source.keywords" required="false" stored="true" type="string"/>
   <copyField dest="meta.source.keywords" source="meta.source.keywords.*"/>
+
+  <!-- treat as multivalued -->
+  <dynamicField name="meta.source.hashtags.*" type="ignored"/>
+  <field indexed="true" multiValued="true" name="meta.source.hashtags" required="false" stored="true" type="string"/>
+  <copyField dest="meta.source.hashtags" source="meta.source.hashtags.*"/>
+
+  <!-- treat as multivalued -->
+  <dynamicField name="meta.source.userMentions.*" type="ignored"/>
+  <field indexed="true" multiValued="true" name="meta.source.userMentions" required="false" stored="true" type="string"/>
+  <copyField dest="meta.source.userMentions" source="meta.source.userMentions.*"/>
+
+  <!-- treat as multivalued -->
+  <dynamicField name="meta.source.urlMentions.*" type="ignored"/>
+  <field indexed="true" multiValued="true" name="meta.source.urlMentions" required="false" stored="true" type="string"/>
+  <copyField dest="meta.source.urlMentions" source="meta.source.urlMentions.*"/>
 
   <field indexed="true" multiValued="false" name="meta.source.datePublished" required="false" stored="true" type="tdate"/>
   <dynamicField indexed="true" multiValued="false" name="meta.extracted.*" required="false" stored="true" type="text_general"/>
