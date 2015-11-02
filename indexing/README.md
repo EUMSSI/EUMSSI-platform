@@ -10,8 +10,8 @@ This is based on the standard Solr configuration from solr 5.3.1, configured to 
 * Install Solr as service
 * Use configset called eumssi (need to `ln -s solr_configsets <SOLR_HOME>/configsets`)
 * create cores:
- * http://<server>/solr/admin/cores?action=CREATE&name=content_items&configSet=eumssi
- * http://<server>/solr/admin/cores?action=CREATE&name=segments&configSet=eumssi
+ * `http://<server>/solr/admin/cores?action=CREATE&name=content_items&configSet=eumssi`
+ * `http://<server>/solr/admin/cores?action=CREATE&name=segments&configSet=eumssi`
 
 ## Synchronization
 
