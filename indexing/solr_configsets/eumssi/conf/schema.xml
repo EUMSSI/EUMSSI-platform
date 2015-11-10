@@ -60,9 +60,6 @@
    -->
   <field indexed="true" multiValued="false" name="_id" required="true" stored="true" type="string"/>
 
-  <!-- main search field -->
-
-
   <!-- segment specific fields -->
   <field indexed="true" multiValued="false" name="parent_id" required="false" stored="true" type="string"/>
   <field indexed="true" multiValued="false" name="segmentType" required="false" stored="true" type="string"/>
