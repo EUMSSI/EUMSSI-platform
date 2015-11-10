@@ -60,6 +60,9 @@
    -->
   <field indexed="true" multiValued="false" name="_id" required="true" stored="true" type="string"/>
 
+  <!-- main search field -->
+
+
   <!-- segment specific fields -->
   <field indexed="true" multiValued="false" name="parent_id" required="false" stored="true" type="string"/>
   <field indexed="true" multiValued="false" name="segmentType" required="false" stored="true" type="string"/>
@@ -68,6 +71,18 @@
 
   <field indexed="true" multiValued="false" name="source" required="false" stored="true" type="string"/>
   <field indexed="true" multiValued="false" name="meta.source.inLanguage" required="false" stored="true" type="string"/>
+
+  <!-- main search field -->
+  <field  indexed="true" multiValued="false" name="contentSearch" required="false" stored="true" type="text_general"/>
+  <copyField dest="contentSearch" source="meta.source.text"/>
+  <copyField dest="contentSearch" source="meta.source.description"/>
+  <copyField dest="contentSearch" source="meta.source.category"/>
+  <copyField dest="contentSearch" source="meta.source.headline"/>
+  <copyField dest="contentSearch" source="meta.source.author"/>
+  <copyField dest="contentSearch" source="meta.extracted.audio_transcript"/>
+  <copyField dest="contentSearch" source="meta.extracted.video_ocr.best"/>
+  <copyField dest="contentSearch" source="meta.source.keywords"/>
+
 
   <dynamicField indexed="true" multiValued="false" name="meta.source.*" required="false" stored="true" type="text_general"/>
   <!-- treat as multivalued -->
@@ -91,6 +106,7 @@
   <copyField dest="meta.source.urlMentions" source="meta.source.urlMentions.*"/>
 
   <field indexed="true" multiValued="false" name="meta.source.datePublished" required="false" stored="true" type="tdate"/>
+
   <dynamicField indexed="true" multiValued="false" name="meta.extracted.*" required="false" stored="true" type="text_general"/>
 
 <!-- treat as multivalued -->
