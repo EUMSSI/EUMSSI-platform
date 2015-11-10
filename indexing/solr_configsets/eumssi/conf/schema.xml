@@ -68,6 +68,8 @@
 
   <field indexed="true" multiValued="false" name="source" required="false" stored="true" type="string"/>
   <field indexed="true" multiValued="false" name="meta.source.inLanguage" required="false" stored="true" type="string"/>
+  <field indexed="true" multiValued="false" name="meta.extracted.text.polarity.numeric" required="false" stored="true" type="float"/>
+  <field indexed="true" multiValued="false" name="meta.extracted.text.polarity.discrete" required="false" stored="true" type="string"/>
 
   <!-- main search field -->
   <field  indexed="true" multiValued="false" name="contentSearch" required="false" stored="true" type="text_general"/>
