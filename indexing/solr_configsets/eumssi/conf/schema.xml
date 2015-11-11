@@ -72,7 +72,7 @@
   <field indexed="true" multiValued="false" name="meta.extracted.text.polarity.discrete" required="false" stored="true" type="string"/>
 
   <!-- main search field -->
-  <field  indexed="true" multiValued="false" name="contentSearch" required="false" stored="true" type="text_general"/>
+  <field  indexed="true" multiValued="true" name="contentSearch" required="false" stored="true" type="text_general"/>
   <copyField dest="contentSearch" source="meta.source.text"/>
   <copyField dest="contentSearch" source="meta.source.description"/>
   <copyField dest="contentSearch" source="meta.source.category"/>
