@@ -68,8 +68,8 @@
 
   <field indexed="true" multiValued="false" name="source" required="false" stored="true" type="string"/>
   <field indexed="true" multiValued="false" name="meta.source.inLanguage" required="false" stored="true" type="string"/>
-  <field indexed="true" multiValued="false" name="meta.extracted.text.polarity.numeric" required="false" stored="true" type="float"/>
-  <field indexed="true" multiValued="false" name="meta.extracted.text.polarity.discrete" required="false" stored="true" type="string"/>
+  <field indexed="true" multiValued="false" name="meta.extracted.text_polarity.numeric" required="false" stored="true" type="float"/>
+  <field indexed="true" multiValued="false" name="meta.extracted.text_polarity.discrete" required="false" stored="true" type="string"/>
 
   <!-- main search field -->
   <field  indexed="true" multiValued="true" name="contentSearch" required="false" stored="true" type="text_general"/>
@@ -109,38 +109,38 @@
   <dynamicField indexed="true" multiValued="false" name="meta.extracted.*" required="false" stored="true" type="text_general"/>
 
 <!-- treat as multivalued -->
-  <dynamicField name="meta.extracted.text.ner.*" type="ignored"/>
-  <dynamicField name="meta.extracted.text.dbpedia.*" type="ignored"/>
+  <dynamicField name="meta.extracted.text_nerl.ner.*" type="ignored"/>
+  <dynamicField name="meta.extracted.text_nerl.dbpedia.*" type="ignored"/>
 
-  <field indexed="true" multiValued="true" name="meta.extracted.text.ner.PERSON" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.ner.PERSON" source="meta.extracted.text.ner.PERSON.*"/>
-  <field indexed="true" multiValued="true" name="meta.extracted.text.dbpedia.PERSON" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.dbpedia.PERSON" source="meta.extracted.text.dbpedia.PERSON.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.ner.PERSON" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.ner.PERSON" source="meta.extracted.text_nerl.ner.PERSON.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.dbpedia.PERSON" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.dbpedia.PERSON" source="meta.extracted.text_nerl.dbpedia.PERSON.*"/>
 
-  <field indexed="true" multiValued="true" name="meta.extracted.text.ner.LOCATION" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.ner.LOCATION" source="meta.extracted.text.ner.LOCATION.*"/>
-  <field indexed="true" multiValued="true" name="meta.extracted.text.dbpedia.LOCATION" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.dbpedia.LOCATION" source="meta.extracted.text.dbpedia.LOCATION.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.ner.LOCATION" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.ner.LOCATION" source="meta.extracted.text_nerl.ner.LOCATION.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.dbpedia.LOCATION" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.dbpedia.LOCATION" source="meta.extracted.text_nerl.dbpedia.LOCATION.*"/>
 
-  <field indexed="true" multiValued="true" name="meta.extracted.text.ner.ORGANIZATION" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.ner.ORGANIZATION" source="meta.extracted.text.ner.ORGANIZATION.*"/>
-  <field indexed="true" multiValued="true" name="meta.extracted.text.dbpedia.ORGANIZATION" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.dbpedia.ORGANIZATION" source="meta.extracted.text.dbpedia.ORGANIZATION.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.ner.ORGANIZATION" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.ner.ORGANIZATION" source="meta.extracted.text_nerl.ner.ORGANIZATION.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.dbpedia.ORGANIZATION" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.dbpedia.ORGANIZATION" source="meta.extracted.text_nerl.dbpedia.ORGANIZATION.*"/>
 
-  <field indexed="true" multiValued="true" name="meta.extracted.text.ner.all" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.ner.all" source="meta.extracted.text.ner.all.*"/>
-  <field indexed="true" multiValued="true" name="meta.extracted.text.dbpedia.all" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.dbpedia.all" source="meta.extracted.text.dbpedia.all.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.ner.all" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.ner.all" source="meta.extracted.text_nerl.ner.all.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.dbpedia.all" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.dbpedia.all" source="meta.extracted.text_nerl.dbpedia.all.*"/>
 
-  <field indexed="true" multiValued="true" name="meta.extracted.text.ner.MISC" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.ner.other" source="meta.extracted.text.ner.MISC.*"/>
-  <field indexed="true" multiValued="true" name="meta.extracted.text.dbpedia.other" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.dbpedia.other" source="meta.extracted.text.dbpedia.other.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.ner.MISC" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.ner.other" source="meta.extracted.text_nerl.ner.MISC.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.dbpedia.other" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.dbpedia.other" source="meta.extracted.text_nerl.dbpedia.other.*"/>
 
-  <field indexed="true" multiValued="true" name="meta.extracted.text.dbpedia.Country" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.dbpedia.Country" source="meta.extracted.text.dbpedia.Country.*"/>
-  <field indexed="true" multiValued="true" name="meta.extracted.text.dbpedia.City" required="false" stored="true" type="string"/>
-  <copyField dest="meta.extracted.text.dbpedia.City" source="meta.extracted.text.dbpedia.City.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.dbpedia.Country" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.dbpedia.Country" source="meta.extracted.text_nerl.dbpedia.Country.*"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.text_nerl.dbpedia.City" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.text_nerl.dbpedia.City" source="meta.extracted.text_nerl.dbpedia.City.*"/>
 
   <uniqueKey>_id</uniqueKey>
 
