@@ -28,12 +28,12 @@ mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_functi
 '''
 dw_video_map = [
     ['DISPLAYDATE', 'datePublished', transf_date, []],
-    # ['inLanguage', 'inLanguage', transf_lang, []],
-    ['httpHigh', 'mediaurl', None, ['video']],
-    ['httpMedium', 'httpMedium', None, ['video']],
-    ['KEYWORDS', 'keywords', None, []],
-    ['TITLE', 'headline', None, ['text']],
-    ['CLOBTEXT', 'text', None, ['text']]
+    ['language', 'inLanguage', transf_lang, []],
+    ['avURLs.http.high', 'mediaurl', None, ['video']],
+    ['avURLs.http.high', 'httpMedium', None, ['video']],
+    ['tags', 'keywords', None, ['keywords']],
+    ['title', 'headline', None, ['title']],
+    ['description', 'text', None, ['text']]
 ]
 
 
@@ -41,7 +41,7 @@ dw_video_map = [
 @click.option('--reset', is_flag=True, help="reset data_available")
 @click.option('--clean', is_flag=True, help="reset data_available and remove existing meta.source")
 def convert(reset, clean):
-    conv = EumssiConverter('DW-video', dw_video_map)
+    conv = EumssiConverter('DW-video-may-release', dw_video_map)
     if reset:
         conv.reset()
     if clean:
