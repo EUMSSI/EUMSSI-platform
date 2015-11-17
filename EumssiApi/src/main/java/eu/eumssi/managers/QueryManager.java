@@ -313,4 +313,41 @@ public class QueryManager {
 		}
 	}
 
+	/**
+	 * Retrieve a list of already processed content items
+	 * 
+	 * @param queueId ID of processing queue
+	 * @param markItems 
+	 * @return list of already processed content items
+	 * @throws EumssiException with a specific StatusType, if one of the following scenarios occurs:
+	 *  <br>
+	 *  <br><code>StatusType.ERROR_INVALID_QUEUE_ID</code> (Error 102) if the specified queue id does not correspond to a valid queue.
+	 *  <br>
+	 *	<br><code>StatusType.ERROR_DB_CONNECT</code> (Error 400) if an unhandled error occurred during acquisition of the database connection.
+	 *  <br><code>StatusType.ERROR_DB_QUERY</code> (Error 401) if an unhandled error occurred during the query execution.
+	 *  <br><code>StatusType.ERROR_UNKNOWN</code> (Error 999) if an unhandled exception is thrown.
+	 */
+	public List<String> getQueueProcessed(String queueId, Integer maxItems, Boolean markItems, String filters) throws EumssiException {
+		DBObject query = null;
+		if (this.queues.containsKey(queueId)) {
+			query = (DBObject) JSON.parse(this.queues.getProperty(queueId));
+			// check that item is not yet (being) processed
+			String testPending = String.format("{\"processing.queues.%s\":\"processed\"}",queueId);
+			query.putAll((BSONObject) JSON.parse(testPending));
+			query.putAll((BSONObject) JSON.parse(filters)); // apply user-provided filters
+		} else {
+			throw new EumssiException(StatusType.ERROR_INVALID_QUEUE_ID);
+		}
+		log.info("performing query "+query.toString()+" on collection "+this.collection.toString());
+		DBCursor resCursor = this.collection.find(query, new BasicDBObject("_id", 1)).limit(maxItems);
+		List<String> resList = new ArrayList<String>();
+		for (DBObject res : resCursor) {
+			resList.add(res.get("_id").toString());
+			if (markItems) {
+				collection.update(new BasicDBObject("_id", res.get("_id")), new BasicDBObject("$set", new BasicDBObject("processing.queues."+queueId,"in_process")));
+			}
+		}
+		return resList;
+	}
+
 }
