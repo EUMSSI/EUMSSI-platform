@@ -67,7 +67,7 @@
   <field indexed="true" multiValued="false" name="endOffset" required="false" stored="true" type="int"/>
 
   <field indexed="true" multiValued="false" name="source" required="false" stored="true" type="string"/>
-  <field indexed="true" multiValued="false" name="meta.source.inLanguage" required="false" stored="true" type="string"/>
+  <field indexed="true" multiValued="false" name="meta.source.inLanguage" required="false" stored="true" type="lowercase"/>
   <field indexed="true" multiValued="false" name="meta.extracted.text_polarity.numeric" required="false" stored="true" type="float"/>
   <field indexed="true" multiValued="false" name="meta.extracted.text_polarity.discrete" required="false" stored="true" type="string"/>
 
