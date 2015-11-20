@@ -7,7 +7,7 @@ import click
 def convert(x):
     meta = {
         #meta['all'] = [w['item'] for w in x['result']['content']]
-        'amalia': x['result']['Amalia_Json'])
+        'amalia': x['result']['Amalia_Json']
     }
     available_data = ['video_persons']
     return meta, available_data
