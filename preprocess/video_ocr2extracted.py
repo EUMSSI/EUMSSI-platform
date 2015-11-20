@@ -7,7 +7,7 @@ import click
 def convert(x):
     meta = {
         #meta['all'] = [w['item'] for w in x['result']['content']]
-        'best': '\n'.join([w['Hyp1']['text'] for w in x['result']['VideoTextDetection']])
+        'best': '\n'.join([w['Hypotheses'][0]['text'] for w in x['result']['VideoTextDetection']])
     }
     available_data = []
     return meta, available_data
