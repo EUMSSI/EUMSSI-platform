@@ -112,6 +112,7 @@ public class QueryManager {
 			// create needed indexes
 			this.collection.createIndex(new BasicDBObject("processing.available_data",1));
 			this.collection.createIndex(new BasicDBObject("meta.source.inLanguage",1));
+			this.collection.createIndex(new BasicDBObject("meta.source.datePublished",-1));
 			this.collection.createIndex(new BasicDBObject("source",1));
 			for (Object queueId : this.queues.keySet()) {
 				this.collection.createIndex(new BasicDBObject(String.format("processing.queues.%s",(String)queueId),1));
@@ -155,7 +156,7 @@ public class QueryManager {
 	 * 
 	 * @param queueId ID of processing queue
 	 * @param markItems 
-	 * @return list of pending content items to process
+	 * @return list of pending content items to process (newest first)
 	 * @throws EumssiException with a specific StatusType, if one of the following scenarios occurs:
 	 *  <br>
 	 *  <br><code>StatusType.ERROR_INVALID_QUEUE_ID</code> (Error 102) if the specified queue id does not correspond to a valid queue.
@@ -176,7 +177,9 @@ public class QueryManager {
 			throw new EumssiException(StatusType.ERROR_INVALID_QUEUE_ID);
 		}
 		log.info("performing query "+query.toString()+" on collection "+this.collection.toString());
-		DBCursor resCursor = this.collection.find(query, new BasicDBObject("_id", 1)).limit(maxItems);
+		DBCursor resCursor = this.collection.find(query, new BasicDBObject("_id", 1))
+				.sort(new BasicDBObject("meta.source.datePublished", -1))
+				.limit(maxItems);
 		List<String> resList = new ArrayList<String>();
 		for (DBObject res : resCursor) {
 			resList.add(res.get("_id").toString());
@@ -331,7 +334,7 @@ public class QueryManager {
 		DBObject query = null;
 		if (this.queues.containsKey(queueId)) {
 			query = (DBObject) JSON.parse(this.queues.getProperty(queueId));
-			// check that item is not yet (being) processed
+			// check that item is already processed
 			String testPending = String.format("{\"processing.queues.%s\":\"processed\"}",queueId);
 			query.putAll((BSONObject) JSON.parse(testPending));
 			query.putAll((BSONObject) JSON.parse(filters)); // apply user-provided filters
