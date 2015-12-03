@@ -50,9 +50,10 @@ def fetch_data(language):
     writer = ItemWriter('DW video','DW-MediaCenter-api')   
     icounter = 0
     for item in itemset['items']:
-        icounter+=1
-        print icounter, " item indexed "
-        writer.write_item(item)
+      item['language'] = language
+      icounter+=1
+      print icounter, " item indexed "
+      writer.write_item(item)
 
 if __name__ == '__main__':
   language = sys.argv[1]
