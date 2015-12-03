@@ -45,15 +45,18 @@ def fetch_data(language):
     
   for i in range(1, number_of_page+1):
     host = "http://www.dw.com/api/list/mediacenter/" + str(code) + "?pageIndex=" + str(i)
-    itemset = json.loads(urllib2.urlopen(host).read())
-    #write data to mongo db
-    writer = ItemWriter('DW video','DW-MediaCenter-api')   
-    icounter = 0
-    for item in itemset['items']:
-      item['language'] = language
-      icounter+=1
-      print icounter, " item indexed "
-      writer.write_item(item)
+    try:
+      itemset = json.loads(urllib2.urlopen(host).read())
+      #write data to mongo db
+      writer = ItemWriter('DW video','DW-MediaCenter-api')   
+      icounter = 0
+      for item in itemset['items']:
+        item['language'] = language
+        icounter+=1
+        writer.write_item(item)
+    except Exception as e:
+      print host
+      print e
 
 if __name__ == '__main__':
   language = sys.argv[1]
