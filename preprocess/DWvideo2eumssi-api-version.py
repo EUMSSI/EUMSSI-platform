@@ -27,13 +27,13 @@ def transf_lang(x):
 mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_function>, [<available_data>,..]}
 '''
 dw_video_map = [
-    ['DISPLAYDATE', 'datePublished', transf_date, []],
+    ['displayDate', 'datePublished', transf_date, []],
     ['language', 'inLanguage', transf_lang, []],
-    ['avURLs.http.high', 'mediaurl', None, ['video']],
-    ['avURLs.http.high', 'httpMedium', None, ['video']],
+    ['reference.url', 'mediaurl', None, ['video']],
     ['tags', 'keywords', None, ['keywords']],
-    ['title', 'headline', None, ['title']],
-    ['description', 'text', None, ['text']]
+    ['name', 'headline', None, ['title']],
+    ['type', 'type', None, ['type']],
+    ['teaserText', 'text', None, ['text']]
 ]
 
 
