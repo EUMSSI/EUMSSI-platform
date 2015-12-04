@@ -31,7 +31,7 @@ class ItemWriter:
     try: 
       cursor = self.col.find({'meta.original.reference.id': item['reference']['id']})
       for i in cursor:
-        return i
+        return "1"
     except Exception as e:
       print "exception: " , e
       return None
@@ -89,4 +89,5 @@ if __name__ == '__main__':
   print '!-----------------------------------------------------'
   language = sys.argv[1]
   duplicatecheck = sys.argv[2]
+  print 'Now fetching data for ', language, ' with the duplicate check option: ', duplicatecheck
   fetch_data(language, duplicatecheck)
