@@ -26,37 +26,60 @@ class ItemWriter:
       print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source':self.source,'meta':{'original':item, 'original_format':self.format}})
     except Exception as e:
       print e
+      
+  def find_item(self, item):
+    try: 
+      cursor = self.col.find({'meta.original.reference.id': item['reference']['id']})
+      for i in cursor:
+        return i
+    except Exception as e:
+      print "exception: " , e
+      return None
+
+def get_number_of_page(code):
+  host = "http://www.dw.com/api/list/mediacenter/" + str(code) + "?pageIndex=1"
+  geninf = json.loads(urllib2.urlopen(host).read())
+  return geninf['paginationInfo']['availablePages']
 
 '''
 Extract items and insert to DB
 '''
 def fetch_data(language):    
+  ''' default values '''
+
   code = 2
-  number_of_page = 351
   if language == 'es':
     code = 28
-    number_of_page = 247
   if language == 'de':
     code = 1
-    number_of_page = 296
   if language == 'fr':
     code = 13
-    number_of_page = 21
-    
+  number_of_page = get_number_of_page(code)  
+  if number_of_page is None:
+    return
+  icounter = 0
   for i in range(1, number_of_page+1):
     host = "http://www.dw.com/api/list/mediacenter/" + str(code) + "?pageIndex=" + str(i)
     try:
       itemset = json.loads(urllib2.urlopen(host).read())
       #write data to mongo db
       writer = ItemWriter('DW video','DW-MediaCenter-api')   
-      icounter = 0
       for item in itemset['items']:
-        item['language'] = language
-        icounter+=1
-        writer.write_item(item)
+        tmp = writer.find_item(item)
+        if tmp is None:
+          item['language'] = language
+          icounter+=1
+          itemdetail = json.loads(urllib2.urlopen(item['reference']['url']).read())
+          item['details'] = itemdetail
+          writer.write_item(item)
+        else:
+          print 'item ', item['reference']['id'], 'exists in db already!'
     except Exception as e:
       print host
       print e
+      return
+      
+
 
 if __name__ == '__main__':
   language = sys.argv[1]
