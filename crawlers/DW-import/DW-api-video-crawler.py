@@ -44,7 +44,7 @@ def get_number_of_page(code):
 '''
 Extract items and insert to DB
 '''
-def fetch_data(language):    
+def fetch_data(language, duplicatecheck):    
   ''' default values '''
 
   code = 2
@@ -65,7 +65,9 @@ def fetch_data(language):
       #write data to mongo db
       writer = ItemWriter('DW video','DW-MediaCenter-api')   
       for item in itemset['items']:
-        tmp = writer.find_item(item)
+        tmp = None
+        if duplicatecheck:
+          tmp = writer.find_item(item)
         if tmp is None:
           item['language'] = language
           icounter+=1
@@ -82,5 +84,9 @@ def fetch_data(language):
 
 
 if __name__ == '__main__':
+  print '!-----------------------------------------------------'
+  print '!@usage: python [me] language duplicatecheck\n!\t--language: en,es,fr,de\n!\t--duplicatecheck:True,False'
+  print '!-----------------------------------------------------'
   language = sys.argv[1]
-  fetch_data(language)
+  duplicatecheck = sys.argv[2]
+  fetch_data(language, duplicatecheck)
