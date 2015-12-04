@@ -85,7 +85,7 @@ def fetch_data(language, duplicatecheck):
 
 if __name__ == '__main__':
   print '!-----------------------------------------------------'
-  print '!@usage: python [me] language duplicatecheck\n!\t--language: en,es,fr,de\n!\t--duplicatecheck:1,0'
+  print '!@usage: python [me] language duplicatecheck\n!\t--language: en,es,fr,de\n!\t--duplicatecheck:1 (check),0 (no check)'
   print '!-----------------------------------------------------'
   language = sys.argv[1]
   duplicatecheck = sys.argv[2]
