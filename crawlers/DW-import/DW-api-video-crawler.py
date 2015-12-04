@@ -66,7 +66,7 @@ def fetch_data(language, duplicatecheck):
       writer = ItemWriter('DW video','DW-MediaCenter-api')   
       for item in itemset['items']:
         tmp = None
-        if duplicatecheck:
+        if duplicatecheck=='1':
           tmp = writer.find_item(item)
         if tmp is None:
           item['language'] = language
@@ -85,7 +85,7 @@ def fetch_data(language, duplicatecheck):
 
 if __name__ == '__main__':
   print '!-----------------------------------------------------'
-  print '!@usage: python [me] language duplicatecheck\n!\t--language: en,es,fr,de\n!\t--duplicatecheck:True,False'
+  print '!@usage: python [me] language duplicatecheck\n!\t--language: en,es,fr,de\n!\t--duplicatecheck:1,0'
   print '!-----------------------------------------------------'
   language = sys.argv[1]
   duplicatecheck = sys.argv[2]
