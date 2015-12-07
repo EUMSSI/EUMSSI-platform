@@ -34,7 +34,7 @@ mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_functi
 news_map = [
     ['publisheddate', 'datePublished', transf_date, []],
     ['language', 'inLanguage', transf_lang, []],
-    ['link', 'mediaurl', None, ['url']],
+    ['link', 'websiteUrl', None, ['url']],
     ['content', 'text', None, ['text']],
     ['page', 'page', None, ['htmlsource']],
     ['description', 'description', None, ['text']],
