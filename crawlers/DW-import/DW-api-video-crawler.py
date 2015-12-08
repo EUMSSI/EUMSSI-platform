@@ -75,10 +75,10 @@ def fetch_data(language, duplicatecheck):
           itemdetail = json.loads(urllib2.urlopen(item['reference']['url']).read())
           item['details'] = itemdetail
           if 'type' in item:
-            if item['type']=='AudioTeaser'
+            if item['type']=='AudioTeaser':
               writer_audio.write_item(item)
             else:
-              if item['type']=='VideoTeaser'
+              if item['type']=='VideoTeaser':
                 writer_video.write_item(item)
         else:
           print 'item ', item['reference']['id'], 'exists in db already!'
