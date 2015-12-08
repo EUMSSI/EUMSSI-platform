@@ -40,11 +40,10 @@ dw_video_map = [
     ['displayDate', 'datePublished', transf_date, []],
     ['language', 'inLanguage', transf_lang, []],
     ['details.mainContent.sources', 'mediaurl', transf_source, ['url']],
-    ['tags', 'keywords', None, ['keywords']],
     ['name', 'headline', None, ['title']],
     ['type', 'type', None, ['type']],
-    ['duration', 'duration', None, ['type']],
-    ['details.permaLink', 'websiteurl', None, ['type']],
+    ['duration', 'duration', None, ['duration']],
+    ['details.permaLink', 'websiteUrl', None, ['url']],
     ['details.teaser', 'text', None, ['text']
     ]
 ]
