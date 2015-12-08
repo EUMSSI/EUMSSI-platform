@@ -63,7 +63,8 @@ def fetch_data(language, duplicatecheck):
     try:
       itemset = json.loads(urllib2.urlopen(host).read())
       #write data to mongo db
-      writer = ItemWriter('DW video','DW-MediaCenter-api')   
+      writer_video = ItemWriter('DW video','DW-MediaCenter-api')   
+      writer_audio = ItemWriter('DW audio','DW-MediaCenter-api')   
       for item in itemset['items']:
         tmp = None
         if duplicatecheck=='1':
@@ -73,7 +74,12 @@ def fetch_data(language, duplicatecheck):
           icounter+=1
           itemdetail = json.loads(urllib2.urlopen(item['reference']['url']).read())
           item['details'] = itemdetail
-          writer.write_item(item)
+          if 'type' in item:
+            if item['type']=='AudioTeaser'
+              writer_audio.write_item(item)
+            else:
+              if item['type']=='VideoTeaser'
+                writer_video.write_item(item)
         else:
           print 'item ', item['reference']['id'], 'exists in db already!'
     except Exception as e:
