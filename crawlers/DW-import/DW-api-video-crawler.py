@@ -79,7 +79,7 @@ def fetch_data(language, duplicatecheck):
     except Exception as e:
       print host
       print e
-      return
+      
       
 
 

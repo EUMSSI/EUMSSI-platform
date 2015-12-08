@@ -6,7 +6,7 @@ from eumssi_converter import EumssiConverter
 import click
 
 def transf_date(x):
-    '''convert from string in DD.MM.YYYY (or YYYY-MM-DD) format from 2014-03-06T12:27:14Z format'''
+    '''convert from string in DD.MM.YYYY (or YYYY-MM-DD) format from 2014-03-06T12:27:14Z format T%H:%M:%SZ'''
 
     try:
         return datetime.datetime.strptime(x[:10], "%d.%m.%Y")
