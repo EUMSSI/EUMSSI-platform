@@ -23,17 +23,30 @@ def transf_lang(x):
     }
     return lang_map.get(x, x)
 
+def transf_source(sourcelist):
+    mediaurl = ""
+    for item in sourcelist:
+        if 'url' in item and mediaurl=="":
+            mediaurl = item['url']
+        if 'quality' in item and 'url' in item and item['quality']=='High':
+            mediaurl = item['url']
+    print "here media url ", mediaurl
+    return mediaurl
+
 '''
 mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_function>, [<available_data>,..]}
 '''
 dw_video_map = [
     ['displayDate', 'datePublished', transf_date, []],
     ['language', 'inLanguage', transf_lang, []],
-    ['reference.url', 'mediaurl', None, ['video']],
+    ['details.mainContent.sources', 'mediaurl', transf_source, ['url']],
     ['tags', 'keywords', None, ['keywords']],
     ['name', 'headline', None, ['title']],
     ['type', 'type', None, ['type']],
-    ['teaserText', 'text', None, ['text']]
+    ['duration', 'duration', None, ['type']],
+    ['details.permaLink', 'websiteurl', None, ['type']],
+    ['details.teaser', 'text', None, ['text']
+    ]
 ]
 
 
