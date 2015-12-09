@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 
+import sys
 import datetime
 import json
-from eumssi_converter import EumssiConverter
+from DW_converter import DWConverter
 import click
 
 def transf_date(x):
     '''convert from string in DD.MM.YYYY (or YYYY-MM-DD) format from 2014-03-06T12:27:14Z format T%H:%M:%SZ'''
 
     try:
-        return datetime.datetime.strptime(x[:10], "%d.%m.%Y")
+        return datetime.datetime.strptime(x[:19], "%Y-%m-%dT%H:%M:%S")
     except ValueError:
         return datetime.datetime.strptime(x[:10], "%Y-%m-%d")
 
@@ -39,11 +40,23 @@ mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_functi
 dw_video_map = [
     ['displayDate', 'datePublished', transf_date, []],
     ['language', 'inLanguage', transf_lang, []],
-    ['details.mainContent.sources', 'mediaurl', transf_source, ['url']],
-    ['name', 'headline', None, ['title']],
-    ['type', 'type', None, ['type']],
-    ['duration', 'duration', None, ['duration']],
-    ['details.permaLink', 'websiteUrl', None, ['url']],
+    ['details.mainContent.sources', 'mediaurl', transf_source, ['video', 'audio']],
+    ['name', 'headline', None, ['text']],
+    ['type', 'type', None, []],
+    ['duration', 'duration', None, []],
+    ['details.permaLink', 'websiteUrl', None, []],
+    ['details.teaser', 'text', None, ['text']
+    ]
+]
+
+dw_audio_map = [
+    ['displayDate', 'datePublished', transf_date, []],
+    ['language', 'inLanguage', transf_lang, []],
+    ['details.mainContent.sources', 'mediaurl', transf_source, ['audio']],
+    ['name', 'headline', None, ['text']],
+    ['type', 'type', None, []],
+    ['duration', 'duration', None, []],
+    ['details.permaLink', 'websiteUrl', None, []],
     ['details.teaser', 'text', None, ['text']
     ]
 ]
@@ -52,8 +65,14 @@ dw_video_map = [
 @click.command()
 @click.option('--reset', is_flag=True, help="reset data_available")
 @click.option('--clean', is_flag=True, help="reset data_available and remove existing meta.source")
-def convert(reset, clean):
-    conv = EumssiConverter('DW-MediaCenter-api', dw_video_map)
+@click.option('--video', is_flag=True, help="convert dw video data")
+def convert(reset, clean, video):
+    conv = None
+    if video:
+        conv = DWConverter('DW-MediaCenter-api', 'DW video', dw_video_map)
+    else:
+        conv = DWConverter('DW-MediaCenter-api', 'DW audio', dw_audio_map)
+
     if reset:
         conv.reset()
     if clean:
@@ -62,3 +81,4 @@ def convert(reset, clean):
 
 if __name__ == '__main__':
     convert()
+    
