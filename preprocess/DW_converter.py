@@ -1,3 +1,8 @@
+'''
+This class does the actual mapping for DW data
+It is the sibling of EumssiConverter but has an option to work with a specific source
+'''
+
 import pymongo
 import time
 
