@@ -82,6 +82,8 @@ def fetch_data(language, duplicatecheck):
           itemdetail = json.loads(urllib2.urlopen(item['reference']['url']).read())
           item['details'] = itemdetail
           item['text'] = getFullText(itemdetail['permaLink'])
+          if len(item['text'])<100: #exceptional case
+            item['text'] = item['teaserText']
           if 'type' in item:
             if item['type']=='AudioTeaser':
               writer_audio.write_item(item)
