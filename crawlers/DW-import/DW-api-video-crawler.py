@@ -8,6 +8,7 @@ import requests
 import sys, os
 from os.path import isdir, join
 import urllib2
+from bs4 import BeautifulSoup
 
 
 class ItemWriter:
@@ -40,6 +41,12 @@ def get_number_of_page(code):
   host = "http://www.dw.com/api/list/mediacenter/" + str(code) + "?pageIndex=1"
   geninf = json.loads(urllib2.urlopen(host).read())
   return geninf['paginationInfo']['availablePages']
+
+def getFullText(url):
+  r = urllib2.urlopen(url)
+  httpcont = r.read()
+  soup = BeautifulSoup(httpcont, 'html.parser')
+  return soup.p.text
 
 '''
 Extract items and insert to DB
@@ -74,6 +81,7 @@ def fetch_data(language, duplicatecheck):
           icounter+=1
           itemdetail = json.loads(urllib2.urlopen(item['reference']['url']).read())
           item['details'] = itemdetail
+          item['text'] = getFullText(itemdetail['permaLink'])
           if 'type' in item:
             if item['type']=='AudioTeaser':
               writer_audio.write_item(item)

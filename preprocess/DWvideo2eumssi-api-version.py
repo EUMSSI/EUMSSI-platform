@@ -45,7 +45,8 @@ dw_video_map = [
     ['type', 'type', None, []],
     ['duration', 'duration', None, []],
     ['details.permaLink', 'websiteUrl', None, []],
-    ['details.teaser', 'text', None, ['text']
+    ['details.teaser', 'teaser', None, ['text']],
+    ['text', 'text', None, ['text']]
     ]
 ]
 
@@ -57,7 +58,8 @@ dw_audio_map = [
     ['type', 'type', None, []],
     ['duration', 'duration', None, []],
     ['details.permaLink', 'websiteUrl', None, []],
-    ['details.teaser', 'text', None, ['text']
+    ['details.teaser', 'teaser', None, ['text']],
+    ['text', 'text', None, ['text']]
     ]
 ]
 
