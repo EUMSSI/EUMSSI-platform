@@ -46,7 +46,15 @@ def getFullText(url):
   r = urllib2.urlopen(url)
   httpcont = r.read()
   soup = BeautifulSoup(httpcont, 'html.parser')
-  return soup.p.text
+  intro = soup.findAll('p', {'class': 'intro'})
+  text = soup.findAll('div', {'class': 'longText'})
+
+  result = ""
+  if len(intro)>0:
+    result += intro[0].text
+  if len(text)>0:
+    result += text[0].text
+  return result
 
 '''
 Extract items and insert to DB
