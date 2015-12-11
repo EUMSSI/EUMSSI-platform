@@ -47,7 +47,6 @@ dw_video_map = [
     ['details.permaLink', 'websiteUrl', None, []],
     ['details.teaser', 'teaser', None, ['text']],
     ['text', 'text', None, ['text']]
-    ]
 ]
 
 dw_audio_map = [
