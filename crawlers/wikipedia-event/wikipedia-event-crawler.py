@@ -43,7 +43,7 @@ Extract items and insert to DB
 def fetch_data(duplicatecheck):    
   ''' default values '''
   total = 0
-  for y in range(2000, 2015):
+  for y in range(2010, 2016):
     icounter = 0
     host = "http://wikitimes.l3s.de/webresources/WebService/getEvents/json/" + str(y) + "-01-01/" + str(y) + "-12-31"
     try:
