@@ -68,43 +68,23 @@ public class DB {
 
 	public static Connection getThreadConnection(final String dbname)
 			throws SQLException {
-	
-			// Config.setDefaultData();
 			Config.setSchema(dbname);
-			if (!driverload) {
-				try {
-					Class.forName("com.mysql.jdbc.Driver");
-				} catch (ClassNotFoundException e1) {
-					log().info("com.mysql.jdbc.Driver not in classpath NO MYSQL CONNECTOR JAR?");
-					e1.printStackTrace();
-					System.exit(1);
-
-				}
-
-			}
 			Connection con = null;
 			try {
-				 con = trytoConnect();
-				 log().info("connected to db: " + con.getMetaData().getURL());
+				con = trytoConnect();
+				log().info("connected to db: " + con.getMetaData().getURL());
 				return con;
-
 			} catch (SQLException e) {
-
 				try {
 					Config.setDefaultData(defaultdata.L3S);
-					 con = trytoConnect();
-					 log().info("connected to db: " + con.getMetaData().getURL());
-						return con;
-
+					con = trytoConnect();
+					log().info("connected to db: " + con.getMetaData().getURL());
+					return con;
 				} catch (SQLException e1) {
-
-
 					Config.setDefaultData(defaultdata.LOCALHOST);
-
-					 con = trytoConnect();
-					 log().info("connected to db: " + con.getMetaData().getURL());
-						return con;
-
+					con = trytoConnect();
+					log().info("connected to db: " + con.getMetaData().getURL());
+					return con;
 				}
 			}
 	}
@@ -112,7 +92,7 @@ public class DB {
 	private static Connection trytoConnect() throws SQLException {
 		final String url = "jdbc:mysql://" + Config.getHost() + ":"
 				+ Config.getPort() + "/" + Config.getSchema();
-
+		System.out.println(url);
 		return DriverManager.getConnection(url, Config.getUsername(),
 				Config.getPassword());
 

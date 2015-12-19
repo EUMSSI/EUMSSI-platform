@@ -27,7 +27,11 @@ import org.apache.tika.sax.TeeContentHandler;
 import org.apache.tika.sax.ToHTMLContentHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
+import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import java.util.UUID;
 
 /**
  * This class is intended to handle the contents in database.
@@ -39,6 +43,10 @@ public class EUMSSI_DBQ {
     private PreparedStatement pstmt;
     private ResultSet res;
     private Statement stmt;
+    
+    public static MongoClient mongoClient = new MongoClient();
+	public static MongoDatabase db = mongoClient.getDatabase("eumssi_db");
+	public static String _collection = "content_items";
     
     LinkContentHandler linkHandler = new LinkContentHandler();
     ContentHandler textHandler = new BodyContentHandler(1000000);
@@ -137,6 +145,121 @@ public class EUMSSI_DBQ {
 	     }
     	 return articles;
 	}
+    
+    
+    public void getNewsToMongodb(String fromdate, String todate) throws FileNotFoundException, UnsupportedEncodingException {
+    	connect();
+    	 try {
+             pstmt = con.prepareStatement("select f.sourcelable," +
+             		" e.hashid, e.urlid, e.title, e.link, e.uri, e.author, e.description, e.publisheddate, " +
+             		" e.updateddate, e.categories, e.contents, e.page, e.sourceid, e.crawleddate" +
+             		" from news_rss_feeds f " + 
+             		" join news_rss_entries e on e.sourceid = f.feedid" +
+             		" where e.publisheddate>=? and e.publisheddate<=?");
+             pstmt.setString(1, fromdate);
+             pstmt.setString(2, todate);
+             ResultSet r = pstmt.executeQuery();
+             int c = 0;
+             while (r.next())  {
+            	 System.out.println(c++);
+            	 String sourceLabel = fix(r.getString("sourcelable"));
+            	 String title = fix(r.getString("title").replace("\t", ""));
+            	 String description = fix(r.getString("description"));
+            	 
+            	 String hashid = fix(r.getString("hashid").replace("\t", ""));
+        		 String urlid = fix(r.getString("urlid").replace("\t", ""));
+        		 
+        		 String link = fix(r.getString("link").replace("\t", ""));
+        		 String uri = fix(r.getString("uri").replace("\t", ""));
+        		 String author = fix(r.getString("author").replace("\t", ""));
+        		 
+        		 String publisheddate =  fix(r.getString ("publisheddate"));
+        		 String updateddate =  fix(r.getString ("updateddate"));
+        		 String categories = fix(r.getString("categories").replace("\t", ""));
+        		 String page = fix(r.getString("page").replace("\t", ""));
+        		 String content = fix(r.getString("contents").replace("\t", ""));
+        		 String sourceid =fix(r.getString("sourceid").replace("\t", ""));
+        		 String crawleddate = fix(r.getString("crawleddate").replace("\t", ""));
+            		
+            	 NewsArticle n = new NewsArticle();
+            	 n.setsourceLabel(sourceLabel);
+	    		n.sethashid(hashid);
+	    		n.setUrlid(urlid); 
+	    		n.setTitle(title) ;
+	    		n.setLink( link) ;
+	    		n.seturi( uri) ;
+	    		n.setAuthor( author); 
+	    		n.setDescription( description); 
+	    		n.setPublishedDate( publisheddate); 
+	    		n.setUpdatedDate( updateddate) ;
+	    		n.setCategories( categories) ;
+	    		n.setPageHTML("NA") ;
+	    		n.setContent(content);
+	    		n.setSourceID (sourceid) ;
+	    		n.setCrawledDate( crawleddate); 
+            		
+	    		
+	    		String lang = "en";
+	    		if (sourceLabel.contains("GreenPower-Zeit")) lang = "de";
+	    		else if (sourceLabel.contains("GreenPower-elpais")) lang = "es";
+	    		else if (sourceLabel.contains("GreenPower-lemonde")) lang = "fr";
+	    		else if (sourceLabel.contains("GreenPower-Guardian")) lang = "en";
+	    		
+	    		Document mdoc = new Document();
+	    		UUID id = UUID.randomUUID();
+	    		mdoc.append("_id", id);
+	    		mdoc.append("source", "News");
+	    		
+	    		Document meta = new Document();
+	    		meta.append("original_format", lang);
+	    		
+	    		Document original = new Document();
+	    		original.append("language", lang);
+	    		original.append("sourceLabel", sourceLabel);
+	    		original.append("publisheddate", publisheddate);
+	    		original.append("sourceid", sourceid);
+	    		original.append("hashid", hashid);
+	    		original.append("author", author);
+	    		original.append("uri", uri);
+	    		original.append("content", content);
+	    		original.append("crawleddate", crawleddate);
+	    		original.append("updateddate", updateddate);
+	    		original.append("link", link);
+	    		original.append("urlid", urlid);
+	    		original.append("title", title);
+	    		original.append("categories", categories);
+	    		
+	    		meta.append("original", original);
+	    		mdoc.append("meta", meta);
+	    		
+	    		
+	    		
+	    		//check existence
+	    		Document exdoc = new Document();
+	    		exdoc.append("source", "News");
+	    		Document exmeta = new Document();
+	    		exmeta.append("original_format", lang);
+	    		exmeta.append("original", original);
+	    		exdoc.append("meta", exmeta);
+	    		
+	    		FindIterable<Document> iterable = db.getCollection(this._collection).find(exdoc);
+	    		if (iterable.first()==null) {
+	    			db.getCollection(this._collection).insertOne(mdoc);
+	    			System.out.println("Insert into the db " + id);
+	    		}
+	    		else {
+	    			System.out.println("Document " + urlid + " has been indexed");
+	    		}
+             }
+	     }catch(SQLException sqle) {
+	         sqle.printStackTrace();
+	     }finally {
+	         Experts_DBHandler.closePStatement(pstmt);
+	         Experts_DBHandler.closeResultSet(res);
+	     }
+    	 
+	}
+    
     
     public String fix(String s) {
     	if (s==null) return "";

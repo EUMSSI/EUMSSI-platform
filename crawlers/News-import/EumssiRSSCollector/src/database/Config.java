@@ -67,23 +67,12 @@ public class Config {
 	};
 
 	public static void setDefaultData(defaultdata index) {
-		switch (index) {
-			case LOCALHOST: {
-				setSchema("eumssi");
-				setHost("localhost");
-				setPort("3306");
-		
-				Config.setUsername("root");
-				Config.setPassword("");
-		
-		
-			}
-			break;
-	
-			default: {
-				throw new NullPointerException("no such config");
-			}
-		}
+		setSchema("eumssi");
+		setHost("localhost");
+		setPort("3306");
+
+		Config.setUsername("root");
+		Config.setPassword("");
 	}
 
 	public static void setDefaultData() {

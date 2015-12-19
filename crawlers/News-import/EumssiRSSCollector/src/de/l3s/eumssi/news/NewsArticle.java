@@ -1,5 +1,7 @@
 package de.l3s.eumssi.news;
 
+import org.bson.Document;
+
 public class NewsArticle {
 	private String hashid;
 	private String  urlid;
@@ -50,4 +52,9 @@ public class NewsArticle {
 		content =c;
 	}
 	public String getContent() {return content;}
+	public Document toBSONDocument() {
+		Document d = new Document() ;
+		d.append("headline", this.getTitle());
+		return null;
+	}
 }

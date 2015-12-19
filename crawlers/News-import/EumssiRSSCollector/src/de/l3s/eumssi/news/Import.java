@@ -19,7 +19,14 @@ import org.json.simple.JSONObject;
 
 import de.l3s.eumssi.news.*;
 
+
+
 public class Import {
+	
+	public Import() {
+		
+	}
+	
 	/**
 	 * 
 	 * @param outputFile
@@ -27,7 +34,7 @@ public class Import {
 	 * @param todate: yyyy-mm-dd
 	 * @throws IOException
 	 */
-	public static void getData(String outputFile, String fromdate, String todate) throws IOException {
+	public static void getDataToJson(String outputFile, String fromdate, String todate) throws IOException {
 		EUMSSI_DBQ db = new EUMSSI_DBQ();
 		HashMap<String, Boolean> mark = new HashMap<String, Boolean> ();
 		try {
@@ -75,6 +82,12 @@ public class Import {
 		}
 	}
 	
+	public static void getDataToMongo(String fromdate, String todate) throws IOException {
+		EUMSSI_DBQ db = new EUMSSI_DBQ();
+		db.getNewsToMongodb(fromdate, todate);
+		
+	}
+	
 	public static void getWordNewsData(String outputFileFolder) throws IOException {
 		EUMSSI_DBQ db = new EUMSSI_DBQ();
 		HashMap<String, Boolean> mark = new HashMap<String, Boolean> ();
@@ -114,15 +127,27 @@ public class Import {
 	}
 	
 	public static void main(String[] args) {
-		
-		System.out.println("@param: \toutputfile fromdate todate");
+		String fromdate = "2014-01-01";
+		String todate = "2018-12-31";
+		System.out.println("@param: fromdate todate");
 		System.out.println("\t\t-outputfile: name of json file");
-		System.out.println("\t\t-fromdate: yyyy-MM-dd format, or 1W to indicate 1 week ago until today");
+		System.out.println("\t\t-fromdate: yyyy-MM-dd format\n, \t\tor 1W to indicate 1 week ago until today");
+		System.out.println("\t\tor 1M to indicate 1 month ago until today");
+		System.out.println("\t\tor 3M to indicate 3 months ago until today");
+		System.out.println("\t\tor 6M to indicate 6 months ago until today");
+		System.out.println("\t\tor 1Y to indicate 12 months ago until today");
 		System.out.println("\t\t-fromdate: yyyy-MM-dd format");
-		if (args.length<3) System.exit(0);
-		String outputfile = args[0];
-		String fromdate = args[1];
-		String todate = args[2];
+		if (args.length<3) {
+			//by default
+			
+			System.out.println("\n===! No params given, using default values:");
+			System.out.println("\n===! " + fromdate + "--> " + todate);
+		}
+		else {
+			fromdate = args[0];
+			todate = args[1];
+		}
+	
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		
 		Date today = new Date();
@@ -135,33 +160,40 @@ public class Import {
 			fromdate = formatter.format(one_week_date);
 			todate = formatter.format(today);
 		}
-		System.out.println("from " + fromdate + "\tto " + todate);
+		if (fromdate.equals("1M")) {
+			//1M ago
+			long one_week_ago = today.getTime() - (30 * 24 * 60 * 60 * 1000);
+			Date one_week_date = new Date(one_week_ago);
+			fromdate = formatter.format(one_week_date);
+			todate = formatter.format(today);
+		}
+		if (fromdate.equals("3M")) {
+			//3M ago
+			long one_week_ago = today.getTime() - (90 * 24 * 60 * 60 * 1000);
+			Date one_week_date = new Date(one_week_ago);
+			fromdate = formatter.format(one_week_date);
+			todate = formatter.format(today);
+		}
+		if (fromdate.equals("6M")) {
+			//6M ago
+			long one_week_ago = today.getTime() - (180 * 24 * 60 * 60 * 1000);
+			Date one_week_date = new Date(one_week_ago);
+			fromdate = formatter.format(one_week_date);
+			todate = formatter.format(today);
+		}
+		if (fromdate.equals("1Y")) {
+			//1 year ago
+			long one_week_ago = today.getTime() - (365 * 24 * 60 * 60 * 1000);
+			Date one_week_date = new Date(one_week_ago);
+			fromdate = formatter.format(one_week_date);
+			todate = formatter.format(today);
+		}
+		System.out.println("sync news from " + fromdate + "\tto " + todate);
 		
 		try {
-			getData(outputfile + "." + fromdate + "." + todate + ".json", fromdate, todate);
+			getDataToMongo(fromdate, todate);
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
-		System.exit(0);
-		//extract wordnews from Eumssi db to text file 
-		try {
-			getWordNewsData(outputfile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.exit(0);
-		
-		//get reddit commemtns to files to be used by NER tool (UIUC)
-		EUMSSI_DBQ db = new EUMSSI_DBQ();
-		try {
-			db.getRedditComment("MONTH", outputfile);
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		}
-		System.exit(0);
-		
-		
 	}
 }

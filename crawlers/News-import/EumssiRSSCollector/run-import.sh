@@ -1,13 +1,11 @@
-#task= eumssi --> energy or wordnews
-task=$1
+#Running sync from mysql to mongodb on weekly basis
 JARS=RSSCollector.jar
 COUNTER=0
 while [  $COUNTER -lt 1000 ]; do
-    let COUNTER=COUNTER+1
     # Spawn a child process:
-    java -cp $JARS de.l3s.rss.RSSCollector $task >log.$task 2>&1&
+    java -cp $JARS de.l3s.eumssi.news.Import 1W >log.import.1W 2>&1&
     t=$!
     # in the background, sleep for 10 secs then kill that process
-    sleep 5h
+    sleep 7d
     kill $t
 done

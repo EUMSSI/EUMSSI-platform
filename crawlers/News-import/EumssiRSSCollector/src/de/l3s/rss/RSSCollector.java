@@ -17,15 +17,19 @@ import de.l3s.util.datatypes.IndexedQueue;
 
 public class RSSCollector {
 	public static void main(String[] args) {
-		//String task = "word-news";
+		String task = "eumssi";
+		
 		if (args.length<1) {
 			System.out.println("Missing parameter");
 			System.out.println("\t Use: de.l3s.rss.RSSCollector <task>");
 			System.out.println("\t <task>:	eumssi or word-news");
-			System.out.println("de.l3s.rss.RSSCollector stopped!");
-			System.exit(0);
+			System.out.println("de.l3s.rss.RSSCollector used 'eumssi' as the default param!");
+			System.out.println("");
 		}
-		String task = args[0];
+		
+		else {
+			 task = args[0];
+		}
 		
 		Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.ERROR);
 		Logger.getLogger("HttpClient").setLevel(Level.ERROR);
@@ -86,24 +90,20 @@ public class RSSCollector {
 					try {
 						Thread.sleep(10000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				return con = DB.getThreadConnection();
-
 			}
 
 		} catch (SQLException e) {
 			try {
 				Thread.sleep(60000);
 			} catch (InterruptedException ex) {
-				// TODO Auto-generated catch block
 				ex.printStackTrace();
 			}
 			try {
 				return con = DB.getThreadConnection();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
