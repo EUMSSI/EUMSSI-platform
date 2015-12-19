@@ -1,5 +1,6 @@
 #Running sync from mysql to mongodb on weekly basis
-JARS=RSSCollector.jar
+mvn install assembly:assembly
+JARS=target/RSSCollector-1.0-jar-with-dependencies.jar
 COUNTER=0
 while [  $COUNTER -lt 1000 ]; do
     # Spawn a child process:
