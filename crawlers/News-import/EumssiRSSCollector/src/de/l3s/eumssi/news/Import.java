@@ -137,9 +137,8 @@ public class Import {
 		System.out.println("\t\tor 6M to indicate 6 months ago until today");
 		System.out.println("\t\tor 1Y to indicate 12 months ago until today");
 		System.out.println("\t\t-fromdate: yyyy-MM-dd format");
-		if (args.length<3) {
+		if (args.length==0) {
 			//by default
-			
 			System.out.println("\n===! No params given, using default values:");
 			System.out.println("\n===! " + fromdate + "--> " + todate);
 		}
@@ -149,10 +148,7 @@ public class Import {
 		}
 	
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		
 		Date today = new Date();
-		
-		
 		if (fromdate.equals("1W")) {
 			//1 week ago
 			long one_week_ago = today.getTime() - (7 * 24 * 60 * 60 * 1000);
