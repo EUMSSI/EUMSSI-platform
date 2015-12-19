@@ -211,7 +211,7 @@ public class EUMSSI_DBQ {
 	    		mdoc.append("source", "News");
 	    		
 	    		Document meta = new Document();
-	    		meta.append("original_format", lang);
+	    		meta.append("original_format", "eumssi-crawler-v102014");
 	    		
 	    		Document original = new Document();
 	    		original.append("language", lang);
