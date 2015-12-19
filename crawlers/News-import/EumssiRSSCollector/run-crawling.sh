@@ -1,10 +1,11 @@
-#task: eumssi 		--> energy; 
-#task: word-news 	--> more general topics; 
-#hint: we should run word-news (this has been discussed topic) to have more information; but keeping eumssi energy topic to have few more data in our collection
+#task: eumssi to crawl engery focused data
+#task: wordnews to crawl more general data
+#hint: as discussed, we should focus on more general topic, but in fact it does not harm to have few more data  on energy
 task=$1
 JARS=RSSCollector.jar
 COUNTER=0
 while [  $COUNTER -lt 10000 ]; do
+    let COUNTER=COUNTER+1
     # Spawn a child process:
     java -cp $JARS de.l3s.rss.RSSCollector $task >log.$task 2>&1&
     t=$!
