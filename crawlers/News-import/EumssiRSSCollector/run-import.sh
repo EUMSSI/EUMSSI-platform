@@ -1,3 +1,4 @@
+#mvn install assembly:assembly to generate jar file, 
 #Running sync from mysql to mongodb on weekly basis
 mvn install assembly:assembly
 JARS=target/RSSCollector-1.0-jar-with-dependencies.jar
