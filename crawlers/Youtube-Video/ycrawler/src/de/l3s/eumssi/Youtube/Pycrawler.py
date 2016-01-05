@@ -38,13 +38,15 @@ class StatusWriter():
   def write_status(self, item, source):
     ''' write video meta to Mongodb '''
     #check if it does not exist
-    existence = self.col.find({"meta.original.id": item["id"]}).count()
+    existence = self.col.find({'source': source, 'meta.original_format':'gdata-api-v102014', "meta.original.id": item["id"]}).count()
     if existence ==0:
         try:
           twuid = uuid.uuid4()
           print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source': source,'meta':{'original':item, 'original_format':'gdata-api-v102014'}})
         except Exception as e:
           print e
+    else:
+        print "------> item["id"] + "exists in database"
 
 
 
@@ -121,6 +123,7 @@ def getVideoMeta(vid):
         video_item["comments"] = comment_items
          #return itemset
         #write data to mongo db
+        print "<-------- writing...."
         writer = StatusWriter()   
         writer.write_status(video_item, _param_data_source)
     except:
