@@ -17,7 +17,7 @@ import urllib, urllib2
 
 
 
-apikey="AIzaSyC4m0onWNnT17UR5oy8u13V7s0VAxXeiCs"
+apikey="AIzaSyB9w6XgZjwAdkTD3OBlOBUn-2OrStM-WUw"
 # Set DEVELOPER_KEY to the API key value from the APIs & auth > Registered apps
 # tab of
 #   https://cloud.google.com/console
@@ -32,7 +32,7 @@ YOUTUBE_URL_BASE = "https://www.youtube.com/watch?v="
 
 class StatusWriter():
   mongo_client = pymongo.MongoClient()
-  db = mongo_client['eumssi_test']
+  db = mongo_client['eumssi_db']
   col = db['content_items']
 
   def write_status(self, item, source):
@@ -52,15 +52,19 @@ class StatusWriter():
 
 
 def youtube_search(options):
+
   youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
     developerKey=DEVELOPER_KEY)
+  print youtube
+  print "start searching for videos here..."
+
 
   # Call the search.list method to retrieve results matching the specified
   # query term.
   search_response = youtube.search().list(
     q=options.q,
     part="id,snippet",
-    order="date",
+    order=options.r,
     maxResults=options.max_results
   ).execute()
 
@@ -87,31 +91,40 @@ def youtube_search(options):
 #COMMENT:  https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=aw4LnKEOYrM&key={YOUR_API_KEY}
 
 def getVideoMeta(vid):
-    url_to_request = YOUTUBE_VIDEO_URL + "&id=" + vid
-    comments_to_request = COMMENT_URL + "&videoId=" + vid 
-    print url_to_request
-    meta =  urllib2.urlopen(url_to_request).read()
-    video_item = json.loads(meta)
-    video_item["url"] = YOUTUBE_URL_BASE + vid
-    video_item["id"] = vid
-    print comments_to_request
-    
-    comment_items = []
-    while True:
-        commentThreads = urllib2.urlopen(comments_to_request).read()
-        comments = json.loads(commentThreads)
-        comment_items += comments["items"]
-        pageToken= comments["nextPageToken"]
-        if not pageToken is None and len(pageToken) >10 :
-            comments_to_request = COMMENT_URL + "&videoId=" + vid  + "&pageToken=" + comments["nextPageToken"] 
-        else:
-            break
-    
-    video_item["comments"] = comment_items
-     #return itemset
-    #write data to mongo db
-    writer = StatusWriter()   
-    writer.write_status(video_item, _param_data_source)
+    try:
+        url_to_request = YOUTUBE_VIDEO_URL + "&id=" + vid
+        comments_to_request = COMMENT_URL + "&videoId=" + vid 
+        print url_to_request
+        meta =  urllib2.urlopen(url_to_request).read()
+        video_item = json.loads(meta)
+        video_item["url"] = YOUTUBE_URL_BASE + vid
+        video_item["id"] = vid
+        print comments_to_request
+        
+        comment_items = []
+        while True:
+            try:
+                commentThreads = urllib2.urlopen(comments_to_request).read()
+                comments = json.loads(commentThreads)
+                comment_items += comments["items"]
+                if ('nextPageToken' in comments):
+                    pageToken= comments["nextPageToken"]
+                    if not pageToken is None and len(pageToken) >10 :
+                        comments_to_request = COMMENT_URL + "&videoId=" + vid  + "&pageToken=" + comments["nextPageToken"] 
+                else:
+                    break
+            except:
+                print "Error in getting coments"
+                break
+
+          
+        video_item["comments"] = comment_items
+         #return itemset
+        #write data to mongo db
+        writer = StatusWriter()   
+        writer.write_status(video_item, _param_data_source)
+    except:
+        print "unexpected error in get Video Meta "
         
 
 '''
@@ -164,13 +177,16 @@ def writeVideoData(_param_data_folder, _param_data_source):
 
 
 if __name__ == "__main__":
+  print "\nUsage: using --q for search term and --r for ranking (date,relevance*,rating,viewCount)"
   argparser.add_argument("--q", help="Search term", default="energy")
+  argparser.add_argument("--r", help="Ranking by", default="relevance")
   argparser.add_argument("--max-results", help="Max results", default=50)
   args = argparser.parse_args()
-
+  print 'start'
   try:
     vids = youtube_search(args)
     for id in vids:
+        print "now get video " + id
         getVideoMeta(id)
   except HttpError, e:
     print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)

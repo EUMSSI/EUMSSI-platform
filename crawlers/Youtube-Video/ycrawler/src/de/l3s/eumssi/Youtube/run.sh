@@ -1,3 +1,4 @@
+#Check __main__ at the python crawler for the usage
 pip install -r requirements.txt 
 COUNTER=0
 while [  $COUNTER -lt 100000 ]; do
@@ -8,7 +9,7 @@ while [  $COUNTER -lt 100000 ]; do
 	renewable-energy fracking
     do
 		echo "search "  $keyword
-	python Pycrawler.py --q $keyword
+	python Pycrawler.py --q $keyword --r date
     done
     sleep 10h
 done
