@@ -46,7 +46,7 @@ class StatusWriter():
         except Exception as e:
           print e
     else:
-        print "------> item["id"] + "exists in database"
+        print "------>" + item["id"] + " exists in database"
 
 
 
