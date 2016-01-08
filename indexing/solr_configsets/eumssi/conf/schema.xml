@@ -72,6 +72,7 @@
   <field indexed="true" multiValued="false" name="meta.extracted.text_polarity.discrete" required="false" stored="true" type="string"/>
   <field indexed="true" multiValued="false" name="meta.source.mediaurl" required="false" stored="true" type="string"/>
 
+  <!-- merged fields -->
   <!-- main search field -->
   <field  indexed="true" multiValued="true" name="contentSearch" required="false" stored="true" type="text_general"/>
   <copyField dest="contentSearch" source="meta.source.text"/>
@@ -83,6 +84,16 @@
   <copyField dest="contentSearch" source="meta.extracted.video_ocr.best"/>
   <copyField dest="contentSearch" source="meta.source.keywords"/>
 
+  <field  indexed="true" multiValued="true" name="search.dbpedia.all" required="false" stored="true" type="string"/>
+  <copyField dest="search.dbpedia_all" source="meta.source.dbpedia_all"/>
+  <copyField dest="search.dbpedia_all" source="meta.extracted.text_nerl.dbpedia.all"/>
+
+  <field  indexed="true" multiValued="true" name="search.keywords" required="false" stored="true" type="string"/>
+  <copyField dest="search.dbpedia_all" source="meta.source.keywords"/>
+  <copyField dest="search.dbpedia_all" source="meta.extracted.text_kea.keywords"/>
+
+
+  <field indexed="true" multiValued="false" name="meta.source.contentLocation" required="false" stored="true" type="location"/>
 
   <dynamicField indexed="true" multiValued="false" name="meta.source.*" required="false" stored="true" type="text_general"/>
   <!-- treat as multivalued -->
@@ -108,6 +119,11 @@
   <field indexed="true" multiValued="false" name="meta.source.datePublished" required="false" stored="true" type="tdate"/>
 
   <dynamicField indexed="true" multiValued="false" name="meta.extracted.*" required="false" stored="true" type="text_general"/>
+
+  <!-- treat as multivalued -->
+  <dynamicField name="meta.source.dbpedia_all.*" type="ignored"/>
+  <field indexed="true" multiValued="true" name="meta.source.dbpedia_all" required="false" stored="true" type="string"/>
+  <copyField dest="meta.source.dbpedia_all" source="meta.source.dbpedia_all.*"/>
 
 <!-- treat as multivalued -->
   <dynamicField name="meta.extracted.text_nerl.ner.*" type="ignored"/>
@@ -320,4 +336,8 @@
 <!-- since fields of this type are by default not stored or indexed,
          any data added to them will be ignored outright.  -->
   <fieldtype class="solr.StrField" indexed="false" multiValued="true" name="ignored" stored="false"/>
+
+  <!-- http://wiki.apache.org/solr/SpatialSearch -->
+  <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
+  <dynamicField name="*_coordinate"  type="tdouble" indexed="true"  stored="false"/>
 </schema>

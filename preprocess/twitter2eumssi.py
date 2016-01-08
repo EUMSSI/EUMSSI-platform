@@ -14,7 +14,7 @@ def transf_date(x):
 
 
 def transf_coordinates(x):
-    return x  # TODO: figure out how to represent this correctly
+    return '{},{}'.format(x[1],x[0])  # http://geojson.org/ [lon,lat] -- switch to Lat-Lon for Solr
 
 def transf_hashtag(tag_list):
     return [tag['text'] for tag in tag_list]
