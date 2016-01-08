@@ -25,6 +25,12 @@ def transf_url(url_list):
 def transf_user(user_list):
     return [user['screen_name'] for user in user_list]
 
+def transf_place(x):
+    place = {}
+    for f in ('name','url','country','country_code','full_name'):
+        place[f] = x[f]
+    return place
+
 '''
 mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_function>, [<available_data>,..]}
 '''
@@ -37,7 +43,8 @@ twitter_map = [
     ['entities.hashtags', 'hashtags', transf_hashtag, []],
     ['entities.user_mentions', 'userMentions', transf_user, []],
     ['entities.urls', 'urlMentions', transf_url, []],
-    ['coordinates.coordinates', 'contentLocation', transf_coordinates, []]
+    ['coordinates.coordinates', 'contentLocation', transf_coordinates, []],
+    ['place', 'place', transf_place, []],
 ]
 
 
