@@ -50,12 +50,15 @@ class EumssiConverter:
             new_field = m[1]
             transform = m[2]
             flags = m[3]
-            if org_field.replace('.', self.SEPARATOR) in original:
-                converted[new_field] = original[
-                    org_field.replace('.', self.SEPARATOR)]
-                if transform:
-                    converted[new_field] = transform(converted[new_field])
-                available_data.extend(flags)
+            try:
+                if org_field.replace('.', self.SEPARATOR) in original:
+                    converted[new_field] = original[
+                        org_field.replace('.', self.SEPARATOR)]
+                    if transform:
+                        converted[new_field] = transform(converted[new_field])
+                    available_data.extend(flags)
+            except Exception as e:
+                print e
         return converted, available_data
 
     def reset(self):
