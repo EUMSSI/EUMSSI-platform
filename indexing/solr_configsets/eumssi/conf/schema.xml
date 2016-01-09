@@ -84,7 +84,7 @@
   <copyField dest="contentSearch" source="meta.extracted.video_ocr.best"/>
   <copyField dest="contentSearch" source="meta.source.keywords"/>
 
-  <field  indexed="true" multiValued="true" name="search.dbpedia.all" required="false" stored="true" type="string"/>
+  <field  indexed="true" multiValued="true" name="search.dbpedia_all" required="false" stored="true" type="string"/>
   <copyField dest="search.dbpedia_all" source="meta.source.dbpedia_all"/>
   <copyField dest="search.dbpedia_all" source="meta.extracted.text_nerl.dbpedia.all"/>
 
