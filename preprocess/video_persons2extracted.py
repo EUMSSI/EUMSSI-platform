@@ -5,12 +5,14 @@ import click
 
 
 def convert(x):
-    meta = {
-        #meta['all'] = [w['item'] for w in x['result']['content']]
-        'amalia': x['result']['Amalia_Json']
-    }
-    available_data = ['video_persons']
-    return meta, available_data
+  available_data = ['video_persons']
+  meta = {}
+  try:
+    meta['amalia'] = x['result']['Amalia_Json']
+    available_data.append('video_persons-amalia')
+  except Exception as e:
+    print "no Amalia data:", e
+  return meta, available_data
 
 
 @click.command()
