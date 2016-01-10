@@ -89,11 +89,12 @@
   <copyField dest="search.dbpedia_all" source="meta.extracted.text_nerl.dbpedia.all"/>
 
   <field  indexed="true" multiValued="true" name="search.keywords" required="false" stored="true" type="string"/>
-  <copyField dest="search.dbpedia_all" source="meta.source.keywords"/>
-  <copyField dest="search.dbpedia_all" source="meta.extracted.text_kea.keywords"/>
+  <copyField dest="search.keywords" source="meta.source.keywords"/>
+  <copyField dest="search.keywords" source="meta.extracted.text_kea.keywords"/>
 
 
   <field indexed="true" multiValued="false" name="meta.source.contentLocation" required="false" stored="true" type="location"/>
+  <dynamicField indexed="true" multiValued="false" name="meta.source.place.*" required="false" stored="true" type="string"/>
 
   <dynamicField indexed="true" multiValued="false" name="meta.source.*" required="false" stored="true" type="text_general"/>
   <!-- treat as multivalued -->
