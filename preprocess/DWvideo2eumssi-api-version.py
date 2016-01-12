@@ -31,9 +31,19 @@ def transf_source(sourcelist):
             mediaurl = item['url']
         if 'quality' in item and 'url' in item and item['quality']=='High':
             mediaurl = item['url']
-    print "here media url ", mediaurl
+    print "Media url ", mediaurl
     return mediaurl
 
+def transf_keywords(itemlist):
+    kws = []
+    print len(itemlist)
+
+    for item in itemlist[0]:
+        print item
+        if 'name' in item and 'type' in item and item['type']=='SearchRef':
+            kws.append(item['name'])
+    print "found this keywords: ", kws
+    return kws
 '''
 mapping in the form [<original_fieldname>, <eumssi_fieldname>, <transform_function>, [<available_data>,..]}
 '''
@@ -46,6 +56,7 @@ dw_video_map = [
     ['duration', 'duration', None, []],
     ['details.permaLink', 'websiteUrl', None, []],
     ['details.teaser', 'teaser', None, ['text']],
+    ['details.referenceGroups.items', 'keywords', transf_keywords, []],
     ['text', 'text', None, ['text']]
 ]
 
@@ -58,6 +69,7 @@ dw_audio_map = [
     ['duration', 'duration', None, []],
     ['details.permaLink', 'websiteUrl', None, []],
     ['details.teaser', 'teaser', None, ['text']],
+    ['details.referenceGroups.items', 'keywords', transf_keywords, []],
     ['text', 'text', None, ['text']]
 
 ]
@@ -70,8 +82,10 @@ dw_audio_map = [
 def convert(reset, clean, video):
     conv = None
     if video:
+        print '=====Processin video'
         conv = DWConverter('DW-MediaCenter-api', 'DW video', dw_video_map)
     else:
+        print '=====processing audio'
         conv = DWConverter('DW-MediaCenter-api', 'DW audio', dw_audio_map)
 
     if reset:
@@ -81,5 +95,6 @@ def convert(reset, clean, video):
     conv.run()
 
 if __name__ == '__main__':
+    print "==Converting DWVideo2 eumssi api version"
     convert()
     
