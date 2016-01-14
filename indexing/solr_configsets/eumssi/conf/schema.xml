@@ -104,12 +104,12 @@
 
   <!-- treat as multivalued -->
   <dynamicField name="meta.source.hashtags.*" type="ignored"/>
-  <field indexed="true" multiValued="true" name="meta.source.hashtags" required="false" stored="true" type="string"/>
+  <field indexed="true" multiValued="true" name="meta.source.hashtags" required="false" stored="true" type="lowercase"/>
   <copyField dest="meta.source.hashtags" source="meta.source.hashtags.*"/>
 
   <!-- treat as multivalued -->
   <dynamicField name="meta.source.userMentions.*" type="ignored"/>
-  <field indexed="true" multiValued="true" name="meta.source.userMentions" required="false" stored="true" type="string"/>
+  <field indexed="true" multiValued="true" name="meta.source.userMentions" required="false" stored="true" type="lowercase"/>
   <copyField dest="meta.source.userMentions" source="meta.source.userMentions.*"/>
 
   <!-- treat as multivalued -->
