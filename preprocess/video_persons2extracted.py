@@ -12,6 +12,12 @@ def convert(x):
     available_data.append('video_persons-amalia')
   except Exception as e:
     print "no Amalia data:", e
+  try:
+    meta['thumbnails'] = [p['thumbnail_face_image_url'] for p in x['result']['Person_Identification'].values()]
+    print meta['thumbnails']
+    available_data.append('video_persons-thumbnails')
+  except Exception as e:
+    print "no Thumbnail data:", e
   return meta, available_data
 
 
