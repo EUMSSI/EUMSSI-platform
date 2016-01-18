@@ -97,6 +97,12 @@
   <dynamicField indexed="true" multiValued="false" name="meta.source.place.*" required="false" stored="true" type="string"/>
 
   <dynamicField indexed="true" multiValued="false" name="meta.source.*" required="false" stored="true" type="text_general"/>
+
+  <!-- treat as multivalued -->
+  <dynamicField name="meta.extracted.video_persons.thumbnails.*" type="ignored"/>
+  <field indexed="true" multiValued="true" name="meta.extracted.video_persons.thumbnails" required="false" stored="true" type="string"/>
+  <copyField dest="meta.extracted.video_persons.thumbnails" source="meta.extracted.video_persons.thumbnails.*"/>
+
   <!-- treat as multivalued -->
   <dynamicField name="meta.source.keywords.*" type="ignored"/>
   <field indexed="true" multiValued="true" name="meta.source.keywords" required="false" stored="true" type="string"/>
