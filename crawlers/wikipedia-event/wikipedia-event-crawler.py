@@ -58,7 +58,7 @@ def fetch_data(duplicatecheck):
       for item in itemset:
         tmp = None
         if duplicatecheck=='1':
-          tmp = writer.find_item(item)
+          tmp = writer_wiki.find_item(item)
         if tmp is None:
           item['language'] = "en"
           icounter+=1
