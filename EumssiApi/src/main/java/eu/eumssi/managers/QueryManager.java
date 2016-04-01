@@ -274,7 +274,12 @@ public class QueryManager {
 			try {
 				String itemId = (String) ((DBObject)item).get("content_id");
 				WriteResult r = collection.update(new BasicDBObject("_id", UUID.fromString(itemId)), new BasicDBObject("$set", new BasicDBObject("processing.results."+queueId,((DBObject) item).get("result"))));
-				collection.update(new BasicDBObject("_id", UUID.fromString(itemId)), new BasicDBObject("$set", new BasicDBObject("processing.queues."+queueId,"processed")));
+				collection.update(
+						new BasicDBObject("_id", UUID.fromString(itemId)), 
+						new BasicDBObject()
+							.append("$set", new BasicDBObject("processing.queues."+queueId,"processed"))
+							.append("$pull", new BasicDBObject("processing.available_data",queueId))
+						);
 				updatedCount += r.getN();
 			} catch (Exception e) { //TODO: better exception handling
 				log.error(String.format("couldn't insert data in document %s", item), e);				
