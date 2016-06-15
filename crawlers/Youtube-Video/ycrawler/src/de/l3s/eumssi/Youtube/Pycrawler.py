@@ -42,7 +42,7 @@ class StatusWriter():
     if existence ==0:
         try:
           twuid = uuid.uuid4()
-          print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source': source,'meta':{'original':item, 'original_format':'gdata-api-v102014'}})
+          print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source': source,'meta':{'original':item, 'original_format':'gdata-api-v102014'},'processing':{'queues':{'metadata':'pending'}}})
         except Exception as e:
           print e
     else:

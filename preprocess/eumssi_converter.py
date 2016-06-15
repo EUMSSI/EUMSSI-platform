@@ -20,6 +20,9 @@ class EumssiConverter:
         print "created index meta.original_format"
         self.col.create_index("processing.available_data")
         print "created index processing.available_data"
+        self.col.create_index("processing.queues.metadata")
+        print "created index processing.queues.metadata"
+
 
     def get_items(self):
         ''' get items to convert '''
@@ -28,7 +31,7 @@ class EumssiConverter:
             # flatten document structure (note: maintains inner structure of fields)
             project[f[0].replace('.', self.SEPARATOR)] = '$meta.original.' + f[0]
         pipeline = [{'$match': {'meta.original_format': self.source_format,
-                                'processing.available_data': {'$ne': "metadata"}}},
+                                'processing.queues.metadata': 'pending'}},
                     {'$project': project}]
         return self.col.aggregate(pipeline, cursor={})
 
@@ -36,7 +39,7 @@ class EumssiConverter:
         ''' write eumssi_meta to MongoDB '''
         try:
             print "updated: ", self.col.update({'_id': item_id},
-                                               {'$set': {'meta.source': eumssi_meta},
+                                               {'$set': {'meta.source': eumssi_meta, 'processing.queues.metadata': 'processed'},
                                                 '$addToSet': {'processing.available_data': {'$each': available_data}}})
         except Exception as e:
             print e

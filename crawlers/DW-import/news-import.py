@@ -24,7 +24,7 @@ class ItemWriter:
     ''' write item to MongoDB '''
     try:
       twuid = uuid.uuid4()
-      print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source':self.source,'meta':{'original':item, 'original_format':self.format}})
+      print "inserted: ", self.col.insert({'_id':uuid.uuid4(),'source':self.source,'meta':{'original':item, 'original_format':self.format},'processing':{'queues':{'metadata':'pending'}}})
     except Exception as e:
       print e
 
