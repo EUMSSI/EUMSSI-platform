@@ -26,6 +26,9 @@ class DWConverter:
         print "created index meta.original_format"
         self.col.create_index("processing.available_data")
         print "created index processing.available_data"
+        self.col.create_index("processing.queues.metadata")
+        print "created index processing.queues.metadata"
+
 
     def get_items(self):
         ''' get items to convert '''
@@ -43,8 +46,24 @@ class DWConverter:
         ''' write eumssi_meta to MongoDB '''
         try:
             print "updated: ", self.col.update({'_id': item_id},
-                                               {'$set': {'meta.source': eumssi_meta},
-                                                '$addToSet': {'processing.available_data': {'$each': available_data}}})
+                                               {'$set': {
+                                                'meta.source': eumssi_meta,
+                                                'processing.queues.metadata': 'processed',
+                                                'processing.queues.text_nerl': 'pending',
+                                                'processing.queues.text_polarity': 'pending',
+                                                'processing.queues.text_ocr-nerl': 'pending',
+                                                'processing.queues.segments_fakeasr': 'pending',
+                                                'processing.queues.segments_ocr': 'pending',
+                                                'processing.queues.video_ocr': 'pending',
+                                                'processing.queues.video_persons': 'pending',
+                                                'processing.queues.video_shots': 'pending',
+                                                'processing.queues.audio_transcript': 'pending',
+                                                'processing.queues.audio_speakers': 'pending'
+                                                },
+                                                '$addToSet': {
+                                                'processing.available_data': {'$each': available_data}
+                                                }
+                                               })
         except Exception as e:
             print e
 

@@ -39,8 +39,24 @@ class EumssiConverter:
         ''' write eumssi_meta to MongoDB '''
         try:
             print "updated: ", self.col.update({'_id': item_id},
-                                               {'$set': {'meta.source': eumssi_meta, 'processing.queues.metadata': 'processed'},
-                                                '$addToSet': {'processing.available_data': {'$each': available_data}}})
+                                               {'$set': {
+                                                'meta.source': eumssi_meta,
+                                                'processing.queues.metadata': 'processed',
+                                                'processing.queues.text_nerl': 'pending',
+                                                'processing.queues.text_polarity': 'pending',
+                                                'processing.queues.text_ocr-nerl': 'pending',
+                                                'processing.queues.segments_fakeasr': 'pending',
+                                                'processing.queues.segments_ocr': 'pending',
+                                                'processing.queues.video_ocr': 'pending',
+                                                'processing.queues.video_persons': 'pending',
+                                                'processing.queues.video_shots': 'pending',
+                                                'processing.queues.audio_transcript': 'pending',
+                                                'processing.queues.audio_speakers': 'pending'
+                                                },
+                                                '$addToSet': {
+                                                'processing.available_data': {'$each': available_data}
+                                                }
+                                               })
         except Exception as e:
             print e
 
