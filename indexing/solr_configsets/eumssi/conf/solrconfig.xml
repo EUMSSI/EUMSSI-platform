@@ -841,6 +841,8 @@
        <str name="echoParams">explicit</str>
        <int name="rows">10</int>
        <str name="df">_id</str>
+       <str name="boost">product(if(exists(meta.extracted.audio_transcript),10,1),if(exists(meta.extracted.video_persons.amalia),5,1))</str>
+       <str name="defType">edismax</str>
      </lst>
     <!-- In addition to defaults, "appends" params can be specified
          to identify values which should be appended to the list of
