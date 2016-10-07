@@ -79,13 +79,17 @@ dw_audio_map = [
 @click.option('--reset', is_flag=True, help="reset data_available")
 @click.option('--clean', is_flag=True, help="reset data_available and remove existing meta.source")
 @click.option('--video', is_flag=True, help="convert dw video data")
-def convert(reset, clean, video):
+@click.option('--groundtruth', is_flag=True, help="convert dw evaluation data")
+def convert(reset, clean, video, groundtruth):
     conv = None
-    if video:
-        print '=====Processin video'
+    if groundtruth:
+        print '=====Processing ground truth'
+        conv = DWConverter('DW-MediaCenter-api', 'DW evaluation', dw_video_map)
+    elif video:
+        print '=====Processing video'
         conv = DWConverter('DW-MediaCenter-api', 'DW video', dw_video_map)
     else:
-        print '=====processing audio'
+        print '=====Processing audio'
         conv = DWConverter('DW-MediaCenter-api', 'DW audio', dw_audio_map)
 
     if reset:
@@ -97,4 +101,3 @@ def convert(reset, clean, video):
 if __name__ == '__main__':
     print "==Converting DWVideo2 eumssi api version"
     convert()
-    
