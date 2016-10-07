@@ -8,6 +8,7 @@ import requests
 import sys
 import os
 from os.path import isdir, join
+import urllib2
 from bs4 import BeautifulSoup
 
 
