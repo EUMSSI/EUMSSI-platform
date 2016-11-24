@@ -9,13 +9,14 @@ class EumssiConverter:
     SEPARATOR = '###'
     SLEEP_TIME = 10  # wait ten seconds if no data to process
 
-    def __init__(self, source_format, mapping, db_name="eumssi_db", coll_name="content_items"):
+    def __init__(self, source_format, mapping, db_name="eumssi_db", coll_name="content_items",sleep_time=10):
         ''' initialize DB connection and create indexes '''
         self.source_format = source_format
         self.mapping = mapping
         mongo_client = pymongo.MongoClient()
         db = mongo_client[db_name]
         self.col = db[coll_name]
+        self.SLEEP_TIME = sleep_time
         self.col.create_index("meta.original_format")
         print "created index meta.original_format"
         self.col.create_index("processing.available_data")
@@ -71,10 +72,11 @@ class EumssiConverter:
             flags = m[3]
             try:
                 if org_field.replace('.', self.SEPARATOR) in original:
-                    converted[new_field] = original[
-                        org_field.replace('.', self.SEPARATOR)]
+                    org_value= original[org_field.replace('.', self.SEPARATOR)]
                     if transform:
-                        converted[new_field] = transform(converted[new_field])
+                        converted[new_field] = transform(org_value)
+                    else:
+                        converted[new_field] = org_value
                     available_data.extend(flags)
             except Exception as e:
                 print e

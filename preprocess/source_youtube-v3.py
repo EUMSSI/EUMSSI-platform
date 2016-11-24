@@ -53,7 +53,7 @@ youtube_video_map = [
 ]
 
 def main():
-  conv = EumssiConverter('youtube-v3',youtube_video_map)
+  conv = EumssiConverter('youtube-v3',youtube_video_map,sleep_time=600)
   #conv = EumssiConverter('Youtube',youtube_video_map)
   conv.run()
   
