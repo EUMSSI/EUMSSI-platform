@@ -6,8 +6,10 @@ import click
 
 def convert(x):
     meta = {
-        #meta['all'] = [w['item'] for w in x['result']['content']]
-        'best': '\n'.join([w['Hypotheses'][0]['text'] for w in x['result']['VideoTextDetection']])
+        #'best': '\n'.join([w['Hypotheses'][0]['text'] for w in x['result']['VideoTextDetection']])
+        #'all': '\n'.join(['\t'.join([h['text'] for h in w['Hypotheses']]) for w in x['result']['VideoTextDetection']])
+        'best': x['result']['text_to_display_doclevel'],
+        'all': x['result']['text_to_index_doclevel']
     }
     available_data = []
     return meta, available_data
