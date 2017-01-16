@@ -2,6 +2,7 @@
 
 from extract_converter import ExtractConverter
 import click
+import json
 
 
 def convert(x):
@@ -13,8 +14,9 @@ def convert(x):
   except Exception as e:
     print "no Amalia data:", e
   try:
-    meta['thumbnails'] = [p['thumbnail_face_image_url'] for p in x['result']['Person_Identification'].values()]
+    meta['thumbnails'] = [p['url'] for p in x['result']['Video_Thumbnails']]
     print meta['thumbnails']
+    meta['thumbnails-json'] = [json.dumps(p) for p in x['result']['Video_Thumbnails']]
     available_data.append('video_persons-thumbnails')
   except Exception as e:
     print "no Thumbnail data:", e
